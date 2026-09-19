@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Chat.css";
 
 import Sidebar from "../components/Sidebar";
@@ -29,6 +30,13 @@ import {
 
 
 function Chat() {
+
+   // ==========================================
+   // NAVIGATION
+   // ==========================================
+
+   const navigate = useNavigate();
+
 
    // ==========================================
    // STATE
@@ -359,9 +367,9 @@ function Chat() {
       setIsLoading(true);
 
 
-      // ==========================================
+      // ========================================
       // TEMPORARY UI USER MESSAGE
-      // ==========================================
+      // ========================================
 
       const temporaryUserMessage = {
 
@@ -495,10 +503,6 @@ function Chat() {
 
                response.interaction_id ||
                null,
-
-            // ======================================
-            // FEEDBACK
-            // ======================================
 
             feedback:
                response.feedback ||
@@ -760,10 +764,6 @@ function Chat() {
 
                               response.interaction_id ||
                               null,
-
-                           // ==================================
-                           // REGENERATED ANSWER HAS NO FEEDBACK
-                           // ==================================
 
                            feedback:
                               null,
@@ -1375,10 +1375,6 @@ function Chat() {
                            message.interaction_id ||
                            null,
 
-                        // ==================================
-                        // LOAD STORED FEEDBACK
-                        // ==================================
-
                         feedback:
                            message.feedback ||
                            null,
@@ -1708,6 +1704,7 @@ function Chat() {
 
       };
 
+
    // ==========================================
    // EXPORT CURRENT CHAT
    // ==========================================
@@ -1890,11 +1887,23 @@ function Chat() {
          );
 
 
+         // =====================================
+         // CLEAR AUTHENTICATION
+         // =====================================
+
          logout();
 
 
-         window.location.href =
-            "/login";
+         // =====================================
+         // NAVIGATE USING REACT ROUTER
+         // =====================================
+
+         navigate(
+            "/login",
+            {
+               replace: true
+            }
+         );
 
       };
 

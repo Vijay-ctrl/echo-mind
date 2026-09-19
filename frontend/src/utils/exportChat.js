@@ -1,6 +1,5 @@
 import jsPDF from "jspdf";
 
-
 /* =========================================
    SAFE TEXT
 ========================================= */
@@ -13,7 +12,6 @@ function safeText(value) {
    return String(value);
 }
 
-
 /* =========================================
    SAFE FILE NAME
 ========================================= */
@@ -25,22 +23,30 @@ function createFileName(title, extension) {
       .replace(/\s+/g, "-")
       .slice(0, 80);
 
-   return `${safeTitle || "gemini-chat"}.${extension}`;
+   return `${safeTitle || "echomind-chat"}.${extension}`;
 }
-
 
 /* =========================================
    MARKDOWN TO PLAIN TEXT
-   Used for TXT and PDF exports.
+
+   Used for:
+   - Copy
+   - TXT
+   - PDF
+
+   Important:
+   - Removes Markdown formatting
+   - Keeps emojis
+   - Keeps normal URLs
+   - Keeps readable bullet points
 ========================================= */
 
-function markdownToPlainText(value) {
+export function markdownToPlainText(value) {
    let text = safeText(value);
 
    if (!text) {
       return "";
    }
-
 
    /* =====================================
       NORMALIZE LINE BREAKS
@@ -49,37 +55,28 @@ function markdownToPlainText(value) {
    text = text.replace(/\r\n/g, "\n");
    text = text.replace(/\r/g, "\n");
 
-
    /* =====================================
       REMOVE CODE FENCES
-
+ 
       ```javascript
-      const x = 10;
+      code
       ```
-
+ 
       becomes:
-
-      const x = 10;
+ 
+      code
    ===================================== */
 
-   text = text.replace(
-      /^```[a-zA-Z0-9_+-]*\s*$/gm,
-      ""
-   );
-
-   text = text.replace(
-      /^```\s*$/gm,
-      ""
-   );
-
+   text = text.replace(/^```[a-zA-Z0-9_+-]*\s*$/gm, "");
+   text = text.replace(/^```\s*$/gm, "");
 
    /* =====================================
       CONVERT MARKDOWN LINKS
-
+ 
       [Google](https://google.com)
-
+ 
       becomes:
-
+ 
       Google (https://google.com)
    ===================================== */
 
@@ -88,14 +85,13 @@ function markdownToPlainText(value) {
       "$1 ($2)"
    );
 
-
    /* =====================================
-      CONVERT IMAGE LINKS
-
+      REMOVE IMAGE MARKDOWN
+ 
       ![Logo](image.png)
-
+ 
       becomes:
-
+ 
       Logo
    ===================================== */
 
@@ -104,16 +100,15 @@ function markdownToPlainText(value) {
       "$1"
    );
 
-
    /* =====================================
       REMOVE HEADING MARKERS
-
+ 
       # Heading
       ## Heading
       ### Heading
-
+ 
       becomes:
-
+ 
       Heading
       Heading
       Heading
@@ -124,14 +119,13 @@ function markdownToPlainText(value) {
       ""
    );
 
-
    /* =====================================
       REMOVE BLOCKQUOTE MARKERS
-
+ 
       > Some text
-
+ 
       becomes:
-
+ 
       Some text
    ===================================== */
 
@@ -140,78 +134,108 @@ function markdownToPlainText(value) {
       ""
    );
 
-
    /* =====================================
       CONVERT UNORDERED LISTS
-
+ 
+      - item
       * item
-      - item
       + item
-
+ 
       becomes:
-
-      - item
-      - item
-      - item
+ 
+      • item
    ===================================== */
 
    text = text.replace(
-      /^\s*[*+-]\s+/gm,
-      "- "
+      /^\s*[-*+]\s+/gm,
+      "• "
    );
-
 
    /* =====================================
-      CLEAN BOLD + ITALIC MARKERS
-
-      ***bold italic***
-      ___bold italic___
-
-      **bold**
-      __bold__
-
-      *italic*
-      _italic_
+      CLEAN ORDERED LISTS
+ 
+      1. item
+      2. item
+ 
+      remains:
+ 
+      1. item
+      2. item
    ===================================== */
 
    text = text.replace(
-      /\*\*\*(.*?)\*\*\*/g,
+      /^\s*(\d+)\.\s+/gm,
+      "$1. "
+   );
+
+   /* =====================================
+      REMOVE BOLD / ITALIC MARKERS
+ 
+      ***bold***
+      ___bold___
+      **bold**
+      __bold__
+      *italic*
+      _italic_
+ 
+      becomes:
+ 
+      bold
+      italic
+   ===================================== */
+
+   text = text.replace(
+      /\*\*\*(.*?)\*\*\*/gs,
       "$1"
    );
 
    text = text.replace(
-      /___(.*?)___/g,
+      /___(.*?)___/gs,
       "$1"
    );
 
    text = text.replace(
-      /\*\*(.*?)\*\*/g,
+      /\*\*(.*?)\*\*/gs,
       "$1"
    );
 
    text = text.replace(
-      /__(.*?)__/g,
+      /__(.*?)__/gs,
       "$1"
    );
 
    text = text.replace(
-      /(?<!\w)\*(.*?)\*(?!\w)/g,
+      /(?<!\w)\*(.*?)\*(?!\w)/gs,
       "$1"
    );
 
    text = text.replace(
-      /(?<!\w)_(.*?)_(?!\w)/g,
+      /(?<!\w)_(.*?)_(?!\w)/gs,
       "$1"
    );
 
+   /* =====================================
+      REMOVE STRIKETHROUGH
+ 
+      ~~text~~
+ 
+      becomes:
+ 
+      text
+   ===================================== */
+
+   text = text.replace(
+      /~~(.*?)~~/gs,
+      "$1"
+   );
 
    /* =====================================
       REMOVE INLINE CODE MARKERS
-
+ 
       `binary search`
-
+ 
       becomes:
-
+ 
       binary search
    ===================================== */
 
@@ -220,15 +244,14 @@ function markdownToPlainText(value) {
       "$1"
    );
 
-
    /* =====================================
-      REMOVE HORIZONTAL RULES
-
+      HORIZONTAL RULES
+ 
       ---
       ***
       ___
-
-      Use ASCII for PDF compatibility.
+ 
+      becomes a simple separator
    ===================================== */
 
    text = text.replace(
@@ -236,14 +259,14 @@ function markdownToPlainText(value) {
       "----------------------------------------"
    );
 
-
    /* =====================================
       REMOVE ESCAPED MARKDOWN CHARACTERS
-
-      \*
-      \#
-      \_
-      \`
+ 
+      \*text\*
+ 
+      becomes:
+ 
+      *text*
    ===================================== */
 
    text = text.replace(
@@ -251,9 +274,8 @@ function markdownToPlainText(value) {
       "$1"
    );
 
-
    /* =====================================
-      REMOVE EXCESSIVE SPACES
+      CLEAN TRAILING SPACES
    ===================================== */
 
    text = text
@@ -261,9 +283,8 @@ function markdownToPlainText(value) {
       .map((line) => line.trimEnd())
       .join("\n");
 
-
    /* =====================================
-      REMOVE TOO MANY BLANK LINES
+      REMOVE EXCESSIVE BLANK LINES
    ===================================== */
 
    text = text.replace(
@@ -271,10 +292,100 @@ function markdownToPlainText(value) {
       "\n\n"
    );
 
-
    return text.trim();
 }
 
+/* =========================================
+   EMOJI → PDF SAFE TEXT
+
+   jsPDF's default Helvetica font does not
+   reliably support emoji.
+
+   IMPORTANT:
+   This function is ONLY used for PDF.
+
+   Copy/TXT will KEEP the original emojis.
+========================================= */
+
+function makePdfSafeText(value) {
+   let text = safeText(value);
+
+   if (!text) {
+      return "";
+   }
+
+   const emojiMap = {
+      "😀": "[grinning]",
+      "😃": "[smiling]",
+      "😄": "[smiling]",
+      "😁": "[grinning]",
+      "😆": "[laughing]",
+      "😅": "[smiling]",
+      "😂": "[laughing]",
+      "🤣": "[laughing]",
+      "😊": "[smiling]",
+      "😇": "[smiling]",
+      "🙂": "[smiling]",
+      "🙃": "[smiling]",
+      "😉": "[wink]",
+      "😍": "[love]",
+      "🥰": "[love]",
+      "😘": "[kiss]",
+      "😎": "[cool]",
+      "🤔": "[thinking]",
+      "🤗": "[hugging]",
+      "😐": "[neutral]",
+      "😑": "[neutral]",
+      "😶": "[silent]",
+      "🙄": "[rolling eyes]",
+      "😮": "[surprised]",
+      "😲": "[surprised]",
+      "😢": "[sad]",
+      "😭": "[crying]",
+      "😡": "[angry]",
+      "😠": "[angry]",
+      "😴": "[sleepy]",
+      "🤯": "[mind blown]",
+      "👍": "[thumbs up]",
+      "👎": "[thumbs down]",
+      "👏": "[applause]",
+      "🙏": "[thanks]",
+      "💡": "[idea]",
+      "🔥": "[fire]",
+      "⭐": "[star]",
+      "🌟": "[star]",
+      "✅": "[success]",
+      "❌": "[error]",
+      "⚠️": "[warning]",
+      "⚠": "[warning]",
+      "🚀": "[launch]",
+      "💻": "[computer]",
+      "📚": "[books]",
+      "📌": "[pin]",
+      "🔍": "[search]",
+      "🔗": "[link]",
+      "❤️": "[heart]",
+      "❤": "[heart]",
+      "💙": "[blue heart]",
+      "💚": "[green heart]",
+      "💛": "[yellow heart]",
+      "🧠": "[brain]",
+      "🎯": "[target]",
+      "🎉": "[celebration]",
+      "✨": "[sparkles]",
+      "📄": "[document]",
+      "📕": "[PDF]",
+      "📋": "[clipboard]"
+   };
+
+   Object.entries(emojiMap).forEach(
+      ([emoji, replacement]) => {
+         text = text.split(emoji).join(replacement);
+      }
+   );
+
+   return text;
+}
 
 /* =========================================
    FORMAT CHAT AS PLAIN TEXT
@@ -282,11 +393,6 @@ function markdownToPlainText(value) {
 
 function formatChatText(title, messages = []) {
    const lines = [];
-
-
-   /* =====================================
-      CHAT TITLE
-   ===================================== */
 
    lines.push(
       safeText(title) || "EchoMind"
@@ -298,17 +404,11 @@ function formatChatText(title, messages = []) {
 
    lines.push("");
 
-
-   /* =====================================
-      MESSAGES
-   ===================================== */
-
    messages.forEach((item) => {
       const role =
          item.role === "user"
             ? "User"
             : "EchoMind";
-
 
       lines.push(role);
 
@@ -316,9 +416,8 @@ function formatChatText(title, messages = []) {
          "-".repeat(60)
       );
 
-
       /* ==================================
-         MESSAGE
+         CLEAN MESSAGE
       ================================== */
 
       const cleanMessage =
@@ -326,13 +425,11 @@ function formatChatText(title, messages = []) {
             item.message
          );
 
-
       lines.push(
          cleanMessage || "(No message)"
       );
 
       lines.push("");
-
 
       /* ==================================
          SOURCES
@@ -349,7 +446,6 @@ function formatChatText(title, messages = []) {
             "-".repeat(60)
          );
 
-
          item.sources.forEach(
             (source, index) => {
                const sourceTitle =
@@ -360,11 +456,9 @@ function formatChatText(title, messages = []) {
                      `Source ${index + 1}`
                   );
 
-
                lines.push(
                   `${index + 1}. ${sourceTitle}`
                );
-
 
                if (source?.url) {
                   lines.push(
@@ -372,12 +466,10 @@ function formatChatText(title, messages = []) {
                   );
                }
 
-
                lines.push("");
             }
          );
       }
-
 
       /* ==================================
          FEEDBACK
@@ -392,7 +484,6 @@ function formatChatText(title, messages = []) {
                ? "Positive"
                : "Negative";
 
-
          lines.push(
             `Feedback: ${feedbackText}`
          );
@@ -401,10 +492,8 @@ function formatChatText(title, messages = []) {
       }
    });
 
-
    return lines.join("\n");
 }
-
 
 /* =========================================
    EXPORT TXT
@@ -423,32 +512,26 @@ export function exportChatAsTxt(
       );
    }
 
-
    const content =
       formatChatText(
          title,
          messages
       );
 
-
    const blob = new Blob(
       [content],
       {
-         type: "text/plain;charset=utf-8",
+         type: "text/plain;charset=utf-8"
       }
    );
-
 
    const url =
       URL.createObjectURL(blob);
 
-
    const link =
       document.createElement("a");
 
-
    link.href = url;
-
 
    link.download =
       createFileName(
@@ -456,23 +539,20 @@ export function exportChatAsTxt(
          "txt"
       );
 
-
    document.body.appendChild(link);
 
    link.click();
 
    link.remove();
 
-
    URL.revokeObjectURL(url);
 }
-
 
 /* =========================================
    EXPORT MARKDOWN
 
-   Markdown formatting is intentionally
-   preserved in this export.
+   Markdown is intentionally preserved
+   in .md export.
 ========================================= */
 
 export function exportChatAsMarkdown(
@@ -488,9 +568,7 @@ export function exportChatAsMarkdown(
       );
    }
 
-
    const lines = [];
-
 
    /* =====================================
       TITLE
@@ -506,7 +584,6 @@ export function exportChatAsMarkdown(
 
    lines.push("");
 
-
    /* =====================================
       MESSAGES
    ===================================== */
@@ -517,13 +594,11 @@ export function exportChatAsMarkdown(
             ? "User"
             : "EchoMind";
 
-
       lines.push(
          `## ${role}`
       );
 
       lines.push("");
-
 
       /* ==================================
          KEEP ORIGINAL MARKDOWN
@@ -534,7 +609,6 @@ export function exportChatAsMarkdown(
       );
 
       lines.push("");
-
 
       /* ==================================
          SOURCES
@@ -551,7 +625,6 @@ export function exportChatAsMarkdown(
 
          lines.push("");
 
-
          item.sources.forEach(
             (source, index) => {
                const sourceTitle =
@@ -560,7 +633,6 @@ export function exportChatAsMarkdown(
                      source?.name ||
                      `Source ${index + 1}`
                   );
-
 
                if (source?.url) {
                   lines.push(
@@ -574,10 +646,8 @@ export function exportChatAsMarkdown(
             }
          );
 
-
          lines.push("");
       }
-
 
       /* ==================================
          FEEDBACK
@@ -592,7 +662,6 @@ export function exportChatAsMarkdown(
                ? "Positive"
                : "Negative";
 
-
          lines.push(
             `**Feedback:** ${feedbackText}`
          );
@@ -601,25 +670,20 @@ export function exportChatAsMarkdown(
       }
    });
 
-
    const blob = new Blob(
       [lines.join("\n")],
       {
-         type: "text/markdown;charset=utf-8",
+         type: "text/markdown;charset=utf-8"
       }
    );
-
 
    const url =
       URL.createObjectURL(blob);
 
-
    const link =
       document.createElement("a");
 
-
    link.href = url;
-
 
    link.download =
       createFileName(
@@ -627,17 +691,14 @@ export function exportChatAsMarkdown(
          "md"
       );
 
-
    document.body.appendChild(link);
 
    link.click();
 
    link.remove();
 
-
    URL.revokeObjectURL(url);
 }
-
 
 /* =========================================
    EXPORT PDF
@@ -656,7 +717,6 @@ export function exportChatAsPdf(
       );
    }
 
-
    /* =====================================
       CREATE PDF
    ===================================== */
@@ -664,27 +724,21 @@ export function exportChatAsPdf(
    const pdf = new jsPDF({
       orientation: "portrait",
       unit: "mm",
-      format: "a4",
+      format: "a4"
    });
-
 
    const pageWidth =
       pdf.internal.pageSize.getWidth();
 
-
    const pageHeight =
       pdf.internal.pageSize.getHeight();
 
-
    const margin = 15;
-
 
    const usableWidth =
       pageWidth - margin * 2;
 
-
    let y = margin;
-
 
    /* =====================================
       PAGE CHECK
@@ -698,11 +752,9 @@ export function exportChatAsPdf(
          pageHeight - margin
       ) {
          pdf.addPage();
-
          y = margin;
       }
    };
-
 
    /* =====================================
       ADD WRAPPED TEXT
@@ -715,24 +767,20 @@ export function exportChatAsPdf(
       spacingAfter = 2
    ) => {
       const content =
-         safeText(text);
-
+         makePdfSafeText(text);
 
       if (!content) {
          return;
       }
 
-
       pdf.setFontSize(
          fontSize
       );
-
 
       pdf.setFont(
          "helvetica",
          fontStyle
       );
-
 
       const wrapped =
          pdf.splitTextToSize(
@@ -740,30 +788,23 @@ export function exportChatAsPdf(
             usableWidth
          );
 
+      wrapped.forEach((line) => {
+         addPageIfNeeded(7);
 
-      wrapped.forEach(
-         (line) => {
-            addPageIfNeeded(7);
+         pdf.text(
+            line,
+            margin,
+            y
+         );
 
-
-            pdf.text(
-               line,
-               margin,
-               y
-            );
-
-
-            y += 5;
-         }
-      );
-
+         y += 5;
+      });
 
       y += spacingAfter;
    };
 
-
    /* =====================================
-      PDF TITLE
+      TITLE
    ===================================== */
 
    addWrappedText(
@@ -772,7 +813,6 @@ export function exportChatAsPdf(
       "bold",
       4
    );
-
 
    /* =====================================
       EXPORT DATE
@@ -785,7 +825,6 @@ export function exportChatAsPdf(
       5
    );
 
-
    /* =====================================
       TOP SEPARATOR
    ===================================== */
@@ -797,143 +836,126 @@ export function exportChatAsPdf(
       5
    );
 
-
    /* =====================================
       MESSAGES
    ===================================== */
 
-   messages.forEach(
-      (item) => {
-         const role =
-            item.role === "user"
-               ? "User"
-               : "EchoMind";
+   messages.forEach((item) => {
+      const role =
+         item.role === "user"
+            ? "User"
+            : "EchoMind";
 
+      /* ================================
+         MESSAGE ROLE
+      ================================= */
 
-         /* ================================
-            MESSAGE ROLE
-         ================================= */
+      addPageIfNeeded(14);
 
-         addPageIfNeeded(14);
+      addWrappedText(
+         role,
+         12,
+         "bold",
+         3
+      );
 
+      /* ================================
+         CLEAN MESSAGE
+      ================================= */
 
-         addWrappedText(
-            role,
-            12,
-            "bold",
-            3
+      const cleanMessage =
+         markdownToPlainText(
+            item.message
          );
 
+      addWrappedText(
+         cleanMessage || "(No message)",
+         10,
+         "normal",
+         4
+      );
 
-         /* ================================
-            CLEAN MESSAGE
-         ================================= */
+      /* ================================
+         SOURCES
+      ================================= */
 
-         const cleanMessage =
-            markdownToPlainText(
-               item.message
-            );
-
+      if (
+         item.role !== "user" &&
+         Array.isArray(item.sources) &&
+         item.sources.length > 0
+      ) {
+         addPageIfNeeded(12);
 
          addWrappedText(
-            cleanMessage || "(No message)",
+            "Sources",
             10,
-            "normal",
-            4
+            "bold",
+            2
          );
 
-
-         /* ================================
-            SOURCES
-         ================================= */
-
-         if (
-            item.role !== "user" &&
-            Array.isArray(item.sources) &&
-            item.sources.length > 0
-         ) {
-            addPageIfNeeded(12);
-
-
-            addWrappedText(
-               "Sources",
-               10,
-               "bold",
-               2
-            );
-
-
-            item.sources.forEach(
-               (source, index) => {
-                  const sourceTitle =
-                     safeText(
-                        source?.title ||
-                        source?.name ||
-                        source?.url ||
-                        `Source ${index + 1}`
-                     );
-
-
-                  addWrappedText(
-                     `${index + 1}. ${sourceTitle}`,
-                     9,
-                     "normal",
-                     1
+         item.sources.forEach(
+            (source, index) => {
+               const sourceTitle =
+                  safeText(
+                     source?.title ||
+                     source?.name ||
+                     source?.url ||
+                     `Source ${index + 1}`
                   );
 
+               addWrappedText(
+                  `${index + 1}. ${sourceTitle}`,
+                  9,
+                  "normal",
+                  1
+               );
 
-                  if (source?.url) {
-                     addWrappedText(
-                        source.url,
-                        8,
-                        "normal",
-                        2
-                     );
-                  }
+               if (source?.url) {
+                  addWrappedText(
+                     source.url,
+                     8,
+                     "normal",
+                     2
+                  );
                }
-            );
-         }
-
-
-         /* ================================
-            FEEDBACK
-         ================================= */
-
-         if (
-            item.role !== "user" &&
-            item.feedback
-         ) {
-            const feedbackText =
-               item.feedback === "positive"
-                  ? "Positive"
-                  : "Negative";
-
-
-            addWrappedText(
-               `Feedback: ${feedbackText}`,
-               9,
-               "normal",
-               3
-            );
-         }
-
-
-         /* ================================
-            MESSAGE SEPARATOR
-         ================================= */
-
-         addPageIfNeeded(8);
-
-
-         addWrappedText(
-            "-".repeat(60),
-            7,
-            "normal",
-            5
+            }
          );
       }
-   );
 
+      /* ================================
+         FEEDBACK
+      ================================= */
+
+      if (
+         item.role !== "user" &&
+         item.feedback
+      ) {
+         const feedbackText =
+            item.feedback === "positive"
+               ? "Positive"
+               : "Negative";
+
+         addWrappedText(
+            `Feedback: ${feedbackText}`,
+            9,
+            "normal",
+            3
+         );
+      }
+
+      /* ================================
+         MESSAGE SEPARATOR
+      ================================= */
+
+      addPageIfNeeded(8);
+
+      addWrappedText(
+         "-".repeat(60),
+         7,
+         "normal",
+         5
+      );
+   });
 
    /* =====================================
       SAVE PDF
