@@ -1,0 +1,86 @@
+/* =========================================
+   REGISTER PAGE
+========================================= */
+
+.register-page {
+   width: 100%;
+   min-height: 100%;
+}
+
+
+/* =========================================
+   REGISTER CARD
+========================================= */
+
+.register-card {
+   width: 100%;
+   max-width: 430px;
+}
+
+
+/* =========================================
+   PASSWORD HINT
+========================================= */
+
+.password-hint {
+   margin-top: -2px;
+
+   color: #6b7280;
+
+   font-size: 12px;
+   line-height: 1.5;
+
+   overflow-wrap: anywhere;
+}
+
+
+/* =========================================
+   INPUT VALIDATION
+========================================= */
+
+.form-group input:invalid:not(:placeholder-shown) {
+   border-color: rgba(239, 68, 68, 0.45);
+}
+
+.form-group input:valid:not(:placeholder-shown) {
+   border-color: rgba(34, 197, 94, 0.25);
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+   .register-card {
+      width: 100%;
+      max-width: 430px;
+   }
+
+   .password-hint {
+      font-size: 12px;
+      line-height: 1.5;
+   }
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 360px) {
+   .password-hint {
+      font-size: 11px;
+   }
+}
+
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+   .form-group input {
+      transition: none;
+   }
+}

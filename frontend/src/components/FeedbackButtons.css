@@ -1,0 +1,264 @@
+/* ==========================================
+   FEEDBACK CONTAINER
+   ========================================== */
+
+.feedback-container {
+   width: 100%;
+   max-width: 100%;
+   display: flex;
+   align-items: center;
+   flex-wrap: wrap;
+   gap: 6px;
+   margin-top: 8px;
+   min-height: 32px;
+}
+
+
+/* ==========================================
+   FEEDBACK BUTTON
+   ========================================== */
+
+.feedback-button {
+   width: 34px;
+   height: 34px;
+   min-width: 34px;
+   min-height: 34px;
+
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+
+   padding: 0;
+
+   border: 1px solid transparent;
+   border-radius: 8px;
+
+   background: transparent;
+   color: #858d9a;
+
+   font-size: 16px;
+   line-height: 1;
+
+   cursor: pointer;
+
+   transition:
+      background-color 0.18s ease,
+      border-color 0.18s ease,
+      color 0.18s ease,
+      transform 0.15s ease,
+      opacity 0.18s ease;
+}
+
+
+/* ==========================================
+   HOVER
+   ========================================== */
+
+.feedback-button:hover:not(:disabled) {
+   background: rgba(255, 255, 255, 0.06);
+   border-color: rgba(255, 255, 255, 0.08);
+   color: #dfe3e8;
+   transform: translateY(-1px);
+}
+
+
+/* ==========================================
+   ACTIVE FEEDBACK
+   ========================================== */
+
+.feedback-button.active {
+   transform: none;
+}
+
+
+/* Positive / 👍 */
+
+.feedback-button.active.positive {
+   background: rgba(16, 185, 129, 0.12);
+   border-color: rgba(16, 185, 129, 0.28);
+   color: #6ee7b7;
+}
+
+
+/* Negative / 👎 */
+
+.feedback-button.active.negative {
+   background: rgba(239, 68, 68, 0.12);
+   border-color: rgba(239, 68, 68, 0.28);
+   color: #fca5a5;
+}
+
+
+/* ==========================================
+   DISABLED / LOADING
+   ========================================== */
+
+.feedback-button:disabled {
+   cursor: not-allowed;
+   opacity: 0.5;
+}
+
+
+/* ==========================================
+   FOCUS
+   ========================================== */
+
+.feedback-button:focus {
+   outline: none;
+}
+
+.feedback-button:focus-visible {
+   outline: 2px solid rgba(255, 255, 255, 0.45);
+   outline-offset: 2px;
+}
+
+
+/* ==========================================
+   ERROR MESSAGE
+   ========================================== */
+
+.feedback-error {
+   min-width: 0;
+   max-width: min(420px, 100%);
+
+   margin-left: 4px;
+
+   color: #fca5a5;
+
+   font-size: 12px;
+   line-height: 1.4;
+
+   overflow-wrap: anywhere;
+   word-break: break-word;
+}
+
+
+/* ==========================================
+   TABLET
+   ========================================== */
+
+@media (max-width: 800px) {
+   .feedback-container {
+      gap: 5px;
+      margin-top: 7px;
+   }
+
+   .feedback-button {
+      width: 34px;
+      height: 34px;
+      min-width: 34px;
+      min-height: 34px;
+   }
+
+   .feedback-error {
+      max-width: 320px;
+      font-size: 11.5px;
+   }
+}
+
+
+/* ==========================================
+   MOBILE
+   ========================================== */
+
+@media (max-width: 620px) {
+   .feedback-container {
+      gap: 5px;
+      margin-top: 6px;
+   }
+
+   .feedback-button {
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      min-height: 36px;
+      border-radius: 8px;
+      font-size: 16px;
+   }
+
+   .feedback-error {
+      flex: 1 1 100%;
+      max-width: 100%;
+      margin-left: 0;
+      margin-top: 2px;
+      font-size: 11px;
+   }
+}
+
+
+/* ==========================================
+   SMALL MOBILE
+   ========================================== */
+
+@media (max-width: 420px) {
+   .feedback-container {
+      gap: 4px;
+      margin-top: 5px;
+   }
+
+   .feedback-button {
+      width: 34px;
+      height: 34px;
+      min-width: 34px;
+      min-height: 34px;
+      font-size: 15px;
+   }
+
+   .feedback-error {
+      font-size: 10.5px;
+      line-height: 1.35;
+   }
+}
+
+
+/* ==========================================
+   VERY SMALL SCREENS
+   ========================================== */
+
+@media (max-width: 360px) {
+   .feedback-container {
+      gap: 4px;
+   }
+
+   .feedback-button {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      min-height: 32px;
+      font-size: 14px;
+   }
+
+   .feedback-error {
+      font-size: 10px;
+   }
+}
+
+
+/* ==========================================
+   TOUCH DEVICES
+   ========================================== */
+
+@media (hover: none) and (pointer: coarse) {
+   .feedback-button:hover:not(:disabled) {
+      background: transparent;
+      border-color: transparent;
+      color: #858d9a;
+      transform: none;
+   }
+
+   .feedback-button:active:not(:disabled) {
+      background: rgba(255, 255, 255, 0.08);
+      transform: scale(0.95);
+   }
+}
+
+
+/* ==========================================
+   REDUCED MOTION
+   ========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+   .feedback-button {
+      transition: none;
+   }
+}

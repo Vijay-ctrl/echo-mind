@@ -1,0 +1,1153 @@
+/* =========================================
+   CHAT MESSAGE
+========================================= */
+
+.message-row {
+   width: 100%;
+   min-width: 0;
+   display: flex;
+   align-items: flex-start;
+   gap: 11px;
+   margin-bottom: 20px;
+   animation: message-appear 0.25s ease-out;
+}
+
+@keyframes message-appear {
+   from {
+      opacity: 0;
+      transform: translateY(5px);
+   }
+
+   to {
+      opacity: 1;
+      transform: translateY(0);
+   }
+}
+
+/* =========================================
+   MESSAGE AVATAR
+========================================= */
+
+.message-avatar {
+   width: 34px;
+   height: 34px;
+   flex: 0 0 34px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   border: 1px solid rgba(129, 140, 248, 0.12);
+   border-radius: 10px;
+   color: #a5b4fc;
+   background: rgba(99, 102, 241, 0.09);
+   box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.03);
+   transition:
+      background 0.2s ease,
+      border-color 0.2s ease;
+}
+
+.message-avatar svg {
+   display: block;
+   flex-shrink: 0;
+}
+
+/* =========================================
+   USER AVATAR
+========================================= */
+
+.user-message .message-avatar {
+   order: 2;
+   color: #cbd5e1;
+   background: rgba(255, 255, 255, 0.055);
+   border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* =========================================
+   MESSAGE CONTENT
+========================================= */
+
+.message-content {
+   min-width: 0;
+   flex: 1 1 auto;
+   max-width: 78%;
+}
+
+/* =========================================
+   USER MESSAGE ALIGNMENT
+========================================= */
+
+.user-message {
+   justify-content: flex-end;
+}
+
+.user-message .message-content {
+   display: flex;
+   flex-direction: column;
+   align-items: flex-end;
+}
+
+/* =========================================
+   MESSAGE BUBBLE
+========================================= */
+
+.message-bubble {
+   width: fit-content;
+   max-width: 100%;
+   min-width: 0;
+   padding: 11px 14px;
+   border: 1px solid rgba(255, 255, 255, 0.065);
+   border-radius: 13px;
+   color: #dbe2ea;
+   background: rgba(255, 255, 255, 0.045);
+   box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.08);
+   transition:
+      background 0.2s ease,
+      border-color 0.2s ease;
+}
+
+/* =========================================
+   MESSAGE BUBBLE HOVER
+========================================= */
+
+.message-bubble:hover {
+   background: rgba(255, 255, 255, 0.055);
+   border-color: rgba(255, 255, 255, 0.09);
+}
+
+/* =========================================
+   USER MESSAGE BUBBLE
+========================================= */
+
+.user-message .message-bubble {
+   color: #eef2ff;
+   background:
+      linear-gradient(145deg,
+         rgba(99, 102, 241, 0.12),
+         rgba(99, 102, 241, 0.08));
+   border-color: rgba(129, 140, 248, 0.15);
+   border-top-right-radius: 5px;
+}
+
+/* =========================================
+   AI MESSAGE BUBBLE
+========================================= */
+
+.ai-message .message-bubble {
+   border-top-left-radius: 5px;
+}
+
+/* =========================================
+   STREAMING MESSAGE
+========================================= */
+
+.message-streaming {
+   animation: none;
+}
+
+.message-bubble-streaming {
+   position: relative;
+   min-height: 24px;
+}
+
+/* =========================================
+   STREAMING CURSOR
+========================================= */
+
+.streaming-cursor {
+   display: inline-block;
+   margin-left: 2px;
+   color: #a5b4fc;
+   font-size: 13px;
+   font-weight: 500;
+   line-height: 1;
+   animation: streaming-cursor-blink 0.9s ease-in-out infinite;
+}
+
+@keyframes streaming-cursor-blink {
+
+   0%,
+   45% {
+      opacity: 1;
+   }
+
+   46%,
+   100% {
+      opacity: 0.15;
+   }
+}
+
+/* =========================================
+   STREAMING PLACEHOLDER
+========================================= */
+
+.streaming-placeholder {
+   display: inline-flex;
+   align-items: center;
+   min-height: 20px;
+}
+
+/* =========================================
+   STREAMING DOTS
+========================================= */
+
+.streaming-dots {
+   display: inline-flex;
+   align-items: center;
+   gap: 4px;
+   min-height: 20px;
+}
+
+.streaming-dots span {
+   width: 5px;
+   height: 5px;
+   display: block;
+   border-radius: 50%;
+   background: #a5b4fc;
+   opacity: 0.35;
+   animation: streaming-dot-pulse 1.2s ease-in-out infinite;
+}
+
+.streaming-dots span:nth-child(1) {
+   animation-delay: 0s;
+}
+
+.streaming-dots span:nth-child(2) {
+   animation-delay: 0.15s;
+}
+
+.streaming-dots span:nth-child(3) {
+   animation-delay: 0.3s;
+}
+
+@keyframes streaming-dot-pulse {
+
+   0%,
+   60%,
+   100% {
+      opacity: 0.3;
+      transform: translateY(0);
+   }
+
+   30% {
+      opacity: 1;
+      transform: translateY(-2px);
+   }
+}
+
+/* =========================================
+   STREAMING STATUS
+========================================= */
+
+.streaming-message-status {
+   display: inline-flex;
+   align-items: center;
+   gap: 6px;
+   margin-top: 8px;
+   color: #8994a5;
+   font-size: 10px;
+   font-weight: 500;
+   line-height: 1.4;
+}
+
+.streaming-message-status svg {
+   flex-shrink: 0;
+   color: #a5b4fc;
+}
+
+.streaming-spinner {
+   animation: streaming-spin 1s linear infinite;
+}
+
+@keyframes streaming-spin {
+   from {
+      transform: rotate(0deg);
+   }
+
+   to {
+      transform: rotate(360deg);
+   }
+}
+
+/* =========================================
+   MESSAGE ROLE
+========================================= */
+
+.message-role {
+   margin-bottom: 6px;
+   color: #8b95a5;
+   font-size: 10px;
+   font-weight: 650;
+   line-height: 1.3;
+   letter-spacing: 0.02em;
+}
+
+.user-message .message-role {
+   color: #a5b4fc;
+}
+
+/* =========================================
+   MESSAGE TEXT
+========================================= */
+
+.message-bubble p {
+   margin: 0;
+   color: inherit;
+   font-size: 13px;
+   line-height: 1.7;
+   white-space: pre-wrap;
+   overflow-wrap: anywhere;
+   word-break: break-word;
+}
+
+.message-text {
+   min-width: 0;
+   max-width: 100%;
+   color: inherit;
+   font-size: inherit;
+   line-height: 1.7;
+   overflow-wrap: anywhere;
+   word-break: break-word;
+}
+
+.message-text>* {
+   max-width: 100%;
+}
+
+.message-text>*:first-child {
+   margin-top: 0;
+}
+
+.message-text>*:last-child {
+   margin-bottom: 0;
+}
+
+/* =========================================
+   ERROR MESSAGE
+========================================= */
+
+.message-bubble-error {
+   background: rgba(239, 68, 68, 0.06);
+   border-color: rgba(239, 68, 68, 0.14);
+}
+
+.message-bubble .error-message {
+   color: #fca5a5;
+   font-size: 12.5px;
+   line-height: 1.6;
+}
+
+/* =========================================
+   MARKDOWN HEADINGS
+========================================= */
+
+.message-text h1,
+.message-text h2,
+.message-text h3,
+.message-text h4,
+.message-text h5,
+.message-text h6 {
+   max-width: 100%;
+   color: inherit;
+   font-weight: 700;
+   line-height: 1.35;
+   overflow-wrap: anywhere;
+}
+
+.message-text h1 {
+   margin: 20px 0 10px;
+   font-size: 24px;
+}
+
+.message-text h2 {
+   margin: 20px 0 10px;
+   font-size: 21px;
+}
+
+.message-text h3 {
+   margin: 18px 0 9px;
+   font-size: 18px;
+}
+
+.message-text h4 {
+   margin: 16px 0 8px;
+   font-size: 16px;
+}
+
+.message-text h5,
+.message-text h6 {
+   margin: 15px 0 8px;
+   font-size: 15px;
+}
+
+/* =========================================
+   MARKDOWN PARAGRAPHS
+========================================= */
+
+.message-text p {
+   margin: 0 0 12px;
+}
+
+/* =========================================
+   BOLD / ITALIC
+========================================= */
+
+.message-text strong {
+   font-weight: 700;
+}
+
+.message-text em {
+   font-style: italic;
+}
+
+/* =========================================
+   MARKDOWN LISTS
+========================================= */
+
+.message-text ul,
+.message-text ol {
+   max-width: 100%;
+   margin: 8px 0 14px;
+   padding-left: 24px;
+}
+
+.message-text li {
+   margin-bottom: 6px;
+   padding-left: 3px;
+   overflow-wrap: anywhere;
+}
+
+.message-text ul ul,
+.message-text ul ol,
+.message-text ol ul,
+.message-text ol ol {
+   margin-top: 5px;
+   margin-bottom: 5px;
+}
+
+/* =========================================
+   MARKDOWN LINKS
+========================================= */
+
+.message-text a {
+   color: #818cf8;
+   font-weight: 500;
+   text-decoration: underline;
+   text-decoration-thickness: 1px;
+   text-underline-offset: 2px;
+   overflow-wrap: anywhere;
+   word-break: break-word;
+}
+
+.message-text a:hover {
+   color: #a5b4fc;
+}
+
+/* =========================================
+   INLINE CODE
+========================================= */
+
+.message-text code {
+   padding: 2px 6px;
+   color: #f9a8d4;
+   background: rgba(244, 114, 182, 0.08);
+   border: 1px solid rgba(244, 114, 182, 0.12);
+   border-radius: 5px;
+   font-family:
+      "SFMono-Regular",
+      Consolas,
+      "Liberation Mono",
+      monospace;
+   font-size: 0.88em;
+   overflow-wrap: anywhere;
+}
+
+/* =========================================
+   CODE BLOCK
+========================================= */
+
+.message-text pre {
+   width: 100%;
+   max-width: 100%;
+   margin: 14px 0;
+   padding: 15px;
+   box-sizing: border-box;
+   overflow-x: auto;
+   overscroll-behavior-x: contain;
+   -webkit-overflow-scrolling: touch;
+   color: #e5e7eb;
+   background: #111827;
+   border: 1px solid #1f2937;
+   border-radius: 10px;
+   line-height: 1.6;
+}
+
+.message-text pre code {
+   display: block;
+   min-width: max-content;
+   padding: 0;
+   color: inherit;
+   background: transparent;
+   border: none;
+   border-radius: 0;
+   font-family:
+      "SFMono-Regular",
+      Consolas,
+      "Liberation Mono",
+      monospace;
+   font-size: 13px;
+   white-space: pre;
+   overflow-wrap: normal;
+   word-break: normal;
+}
+
+/* =========================================
+   BLOCKQUOTE
+========================================= */
+
+.message-text blockquote {
+   max-width: 100%;
+   margin: 14px 0;
+   padding: 10px 14px;
+   color: #aab3c2;
+   background: rgba(255, 255, 255, 0.035);
+   border-left: 3px solid #6366f1;
+   border-radius: 0 8px 8px 0;
+}
+
+.message-text blockquote p {
+   margin-bottom: 0;
+}
+
+/* =========================================
+   HORIZONTAL LINE
+========================================= */
+
+.message-text hr {
+   margin: 18px 0;
+   border: none;
+   border-top: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+/* =========================================
+   TABLES
+========================================= */
+
+.message-text table {
+   width: 100%;
+   max-width: 100%;
+   margin: 16px 0;
+   border-collapse: collapse;
+   font-size: 13px;
+}
+
+.message-text th,
+.message-text td {
+   padding: 9px 11px;
+   text-align: left;
+   border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.message-text th {
+   font-weight: 700;
+   background: rgba(255, 255, 255, 0.045);
+}
+
+.message-text tr:nth-child(even) td {
+   background: rgba(255, 255, 255, 0.018);
+}
+
+/* =========================================
+   MESSAGE ACTIONS
+========================================= */
+
+.message-actions {
+   min-width: 0;
+   max-width: 100%;
+   display: flex;
+   align-items: center;
+   flex-wrap: wrap;
+   gap: 7px;
+   margin-top: 10px;
+}
+
+/* =========================================
+   COMMON ACTION BUTTON STYLES
+========================================= */
+
+.copy-answer-button,
+.regenerate-answer-button {
+   min-height: 32px;
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   gap: 6px;
+   margin: 0;
+   padding: 6px 10px;
+   font-family: inherit;
+   font-size: 12px;
+   font-weight: 500;
+   line-height: 1;
+   white-space: nowrap;
+   cursor: pointer;
+   border-radius: 7px;
+   transition:
+      color 0.2s ease,
+      background 0.2s ease,
+      border-color 0.2s ease,
+      transform 0.15s ease,
+      opacity 0.2s ease;
+}
+
+/* =========================================
+   COPY ANSWER BUTTON
+========================================= */
+
+.copy-answer-button {
+   color: #9ca3af;
+   background: transparent;
+   border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.copy-answer-button:hover:not(:disabled) {
+   color: #a5b4fc;
+   background: rgba(99, 102, 241, 0.09);
+   border-color: rgba(129, 140, 248, 0.25);
+   transform: translateY(-1px);
+}
+
+.copy-answer-button:active:not(:disabled) {
+   transform: translateY(0);
+}
+
+.copy-answer-button:focus-visible {
+   outline: 2px solid #6366f1;
+   outline-offset: 2px;
+}
+
+.copy-answer-button:disabled {
+   cursor: not-allowed;
+   opacity: 0.5;
+}
+
+/* =========================================
+   COPIED STATE
+========================================= */
+
+.copy-answer-button.copied {
+   color: #86efac;
+   background: rgba(34, 197, 94, 0.08);
+   border-color: rgba(74, 222, 128, 0.20);
+}
+
+.copy-answer-button.copied:hover {
+   color: #86efac;
+   background: rgba(34, 197, 94, 0.08);
+   border-color: rgba(74, 222, 128, 0.25);
+}
+
+/* =========================================
+   REGENERATE ANSWER BUTTON
+========================================= */
+
+.regenerate-answer-button {
+   color: #9ca3af;
+   background: transparent;
+   border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.regenerate-answer-button:hover:not(:disabled) {
+   color: #c4b5fd;
+   background: rgba(139, 92, 246, 0.09);
+   border-color: rgba(167, 139, 250, 0.25);
+   transform: translateY(-1px);
+}
+
+.regenerate-answer-button:active:not(:disabled) {
+   transform: translateY(0);
+}
+
+.regenerate-answer-button:focus-visible {
+   outline: 2px solid #8b5cf6;
+   outline-offset: 2px;
+}
+
+.regenerate-answer-button:disabled {
+   cursor: not-allowed;
+   opacity: 0.55;
+}
+
+/* =========================================
+   REGENERATE SPINNER
+========================================= */
+
+.regenerate-spinner {
+   flex-shrink: 0;
+   animation: regenerate-spin 0.8s linear infinite;
+}
+
+@keyframes regenerate-spin {
+   from {
+      transform: rotate(0deg);
+   }
+
+   to {
+      transform: rotate(360deg);
+   }
+}
+
+/* =========================================
+   WEB SEARCH INDICATOR
+========================================= */
+
+.web-search-indicator {
+   width: fit-content;
+   max-width: 100%;
+   display: inline-flex;
+   align-items: center;
+   gap: 6px;
+   margin-top: 9px;
+   padding: 5px 9px;
+   border: 1px solid rgba(129, 140, 248, 0.11);
+   border-radius: 999px;
+   color: #8994a5;
+   background: rgba(99, 102, 241, 0.045);
+   font-size: 9.5px;
+   font-weight: 550;
+   line-height: 1.3;
+   user-select: none;
+}
+
+.web-search-indicator svg {
+   flex-shrink: 0;
+   color: #a5b4fc;
+}
+
+/* =========================================
+   WEB SOURCES SECTION
+========================================= */
+
+.sources-section {
+   width: 100%;
+   min-width: 0;
+   max-width: 100%;
+   margin-top: 12px;
+}
+
+/* =========================================
+   SOURCES HEADING
+========================================= */
+
+.sources-heading {
+   min-width: 0;
+   display: flex;
+   align-items: center;
+   gap: 6px;
+   margin-bottom: 8px;
+   color: #8d97a6;
+   font-size: 10.5px;
+   font-weight: 600;
+   line-height: 1.4;
+   letter-spacing: 0.02em;
+}
+
+.sources-heading svg {
+   flex-shrink: 0;
+   color: #a5b4fc;
+}
+
+/* =========================================
+   SOURCES COUNT
+========================================= */
+
+.sources-count {
+   min-width: 18px;
+   height: 18px;
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   padding: 0 5px;
+   border: 1px solid rgba(255, 255, 255, 0.07);
+   border-radius: 999px;
+   color: #9da6b4;
+   background: rgba(255, 255, 255, 0.035);
+   font-size: 9px;
+   font-weight: 600;
+   line-height: 1;
+   font-variant-numeric: tabular-nums;
+}
+
+/* =========================================
+   SOURCES LIST
+========================================= */
+
+.sources-list {
+   width: 100%;
+   min-width: 0;
+   max-width: 100%;
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+   .message-content {
+      max-width: 84%;
+   }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+   .message-row {
+      gap: 8px;
+      margin-bottom: 17px;
+   }
+
+   .message-avatar {
+      width: 30px;
+      height: 30px;
+      flex-basis: 30px;
+      border-radius: 8px;
+   }
+
+   .message-avatar svg {
+      width: 16px;
+      height: 16px;
+   }
+
+   .message-content {
+      max-width: calc(100% - 38px);
+   }
+
+   .message-bubble {
+      padding: 10px 12px;
+      border-radius: 11px;
+   }
+
+   .user-message .message-bubble {
+      border-top-right-radius: 4px;
+   }
+
+   .ai-message .message-bubble {
+      border-top-left-radius: 4px;
+   }
+
+   .message-role {
+      margin-bottom: 5px;
+      font-size: 9.5px;
+   }
+
+   .message-text {
+      font-size: 14px;
+      line-height: 1.65;
+   }
+
+   .message-text h1 {
+      font-size: 21px;
+   }
+
+   .message-text h2 {
+      font-size: 19px;
+   }
+
+   .message-text h3 {
+      font-size: 17px;
+   }
+
+   .message-text h4 {
+      font-size: 15px;
+   }
+
+   .message-text ul,
+   .message-text ol {
+      padding-left: 21px;
+   }
+
+   .message-text pre {
+      margin: 12px 0;
+      padding: 12px;
+      border-radius: 8px;
+   }
+
+   .message-text pre code {
+      font-size: 12px;
+   }
+
+   .message-text table {
+      display: block;
+      width: max-content;
+      min-width: 100%;
+      max-width: none;
+      overflow-x: auto;
+      white-space: nowrap;
+   }
+
+   .message-actions {
+      gap: 6px;
+   }
+
+   .copy-answer-button,
+   .regenerate-answer-button {
+      min-height: 36px;
+      padding: 7px 10px;
+      font-size: 12px;
+   }
+
+   .web-search-indicator {
+      margin-top: 7px;
+      padding: 4px 8px;
+      font-size: 9px;
+   }
+
+   .sources-section {
+      margin-top: 10px;
+   }
+
+   .sources-heading {
+      margin-bottom: 7px;
+      font-size: 10px;
+   }
+
+   .sources-count {
+      min-width: 17px;
+      height: 17px;
+      font-size: 8.5px;
+   }
+
+   .sources-list {
+      gap: 7px;
+   }
+
+   .streaming-message-status {
+      font-size: 9.5px;
+   }
+
+   .streaming-cursor {
+      font-size: 12px;
+   }
+
+   .streaming-dots {
+      gap: 3px;
+   }
+
+   .streaming-dots span {
+      width: 4px;
+      height: 4px;
+   }
+}
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 400px) {
+   .message-row {
+      gap: 7px;
+   }
+
+   .message-avatar {
+      width: 28px;
+      height: 28px;
+      flex-basis: 28px;
+      border-radius: 7px;
+   }
+
+   .message-avatar svg {
+      width: 15px;
+      height: 15px;
+   }
+
+   .message-content {
+      max-width: calc(100% - 35px);
+   }
+
+   .message-bubble {
+      padding: 9px 11px;
+   }
+
+   .message-role {
+      font-size: 9px;
+   }
+
+   .message-text {
+      font-size: 13px;
+   }
+
+   .message-text h1 {
+      font-size: 19px;
+   }
+
+   .message-text h2 {
+      font-size: 17px;
+   }
+
+   .message-text h3 {
+      font-size: 16px;
+   }
+
+   .message-text pre {
+      padding: 10px;
+   }
+
+   .message-text pre code {
+      font-size: 11.5px;
+   }
+
+   .message-text ul,
+   .message-text ol {
+      padding-left: 19px;
+   }
+
+   .copy-answer-button,
+   .regenerate-answer-button {
+      min-height: 34px;
+      padding: 6px 8px;
+      font-size: 11px;
+   }
+
+   .web-search-indicator {
+      padding: 4px 7px;
+      font-size: 8.5px;
+   }
+
+   .sources-heading {
+      font-size: 9.5px;
+   }
+
+   .sources-count {
+      min-width: 16px;
+      height: 16px;
+      font-size: 8px;
+   }
+
+   .sources-list {
+      gap: 6px;
+   }
+
+   .streaming-message-status {
+      font-size: 9px;
+   }
+
+   .streaming-cursor {
+      font-size: 11px;
+   }
+}
+
+/* =========================================
+   VERY SMALL MOBILE
+========================================= */
+
+@media (max-width: 340px) {
+   .message-row {
+      gap: 6px;
+   }
+
+   .message-avatar {
+      width: 26px;
+      height: 26px;
+      flex-basis: 26px;
+      border-radius: 7px;
+   }
+
+   .message-avatar svg {
+      width: 14px;
+      height: 14px;
+   }
+
+   .message-content {
+      max-width: calc(100% - 32px);
+   }
+
+   .message-bubble {
+      padding: 8px 9px;
+   }
+
+   .message-text {
+      font-size: 12.5px;
+      line-height: 1.6;
+   }
+
+   .message-text h1 {
+      font-size: 18px;
+   }
+
+   .message-text h2 {
+      font-size: 16px;
+   }
+
+   .message-text h3 {
+      font-size: 15px;
+   }
+
+   .copy-answer-button,
+   .regenerate-answer-button {
+      min-height: 34px;
+      padding: 6px 7px;
+      font-size: 10.5px;
+   }
+
+   .copy-answer-button span,
+   .regenerate-answer-button span {
+      overflow-wrap: normal;
+   }
+}
+
+/* =========================================
+   TOUCH DEVICES
+========================================= */
+
+@media (hover: none) and (pointer: coarse) {
+   .message-bubble:hover {
+      background: rgba(255, 255, 255, 0.045);
+      border-color: rgba(255, 255, 255, 0.065);
+   }
+
+   .copy-answer-button:hover:not(:disabled),
+   .regenerate-answer-button:hover:not(:disabled) {
+      transform: none;
+   }
+
+   .copy-answer-button:active:not(:disabled),
+   .regenerate-answer-button:active:not(:disabled) {
+      transform: scale(0.97);
+   }
+}
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+   .message-row {
+      animation: none;
+   }
+
+   .message-bubble,
+   .message-avatar,
+   .copy-answer-button,
+   .regenerate-answer-button {
+      transition: none;
+   }
+
+   .regenerate-spinner,
+   .streaming-spinner,
+   .streaming-cursor,
+   .streaming-dots span {
+      animation: none;
+   }
+
+   .streaming-cursor {
+      opacity: 1;
+   }
+
+   .streaming-dots span {
+      opacity: 0.6;
+   }
+}

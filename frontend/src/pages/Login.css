@@ -1,0 +1,156 @@
+/* =========================================
+   LOGIN PAGE
+   Login-specific styles only.
+   Shared authentication styles are in Auth.css.
+========================================= */
+
+.login-page {
+   width: 100%;
+   min-height: 100%;
+}
+
+/* =========================================
+   LOGIN CARD
+========================================= */
+
+.login-card {
+   width: 100%;
+   max-width: 430px;
+}
+
+/* =========================================
+   LOGIN HEADER
+========================================= */
+
+.login-page .auth-header p {
+   max-width: 360px;
+   margin-left: auto;
+   margin-right: auto;
+   line-height: 1.55;
+}
+
+/* =========================================
+   FORM SPACING
+========================================= */
+
+.login-page .auth-form {
+   width: 100%;
+}
+
+/* Keep the forgot-password link visually
+   connected to the password field */
+.login-page .forgot-password-row {
+   margin-top: -2px;
+}
+
+/* =========================================
+   PASSWORD FIELD
+========================================= */
+
+.login-page .password-input-wrapper {
+   width: 100%;
+}
+
+/* =========================================
+   ERROR MESSAGE
+========================================= */
+
+.login-page .auth-error {
+   width: 100%;
+   overflow-wrap: anywhere;
+}
+
+/* =========================================
+   SUBMIT BUTTON
+========================================= */
+
+.login-page .auth-submit {
+   width: 100%;
+}
+
+/* =========================================
+   ACCOUNT SWITCH
+========================================= */
+
+.login-page .auth-switch {
+   width: 100%;
+   text-align: center;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 768px) {
+   .login-card {
+      width: min(100%, 430px);
+   }
+
+   .login-page .auth-header p {
+      max-width: 340px;
+   }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+   .login-card {
+      width: 100%;
+      max-width: 430px;
+   }
+
+   .login-page .auth-header p {
+      max-width: 100%;
+      line-height: 1.5;
+   }
+
+   .login-page .auth-switch {
+      line-height: 1.5;
+   }
+}
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 360px) {
+   .login-page .auth-header p {
+      font-size: 13px;
+   }
+
+   .login-page .forgot-password-row {
+      font-size: 13px;
+   }
+
+   .login-page .auth-switch {
+      font-size: 13px;
+   }
+}
+
+/* =========================================
+   VERY SMALL DEVICES
+========================================= */
+
+@media (max-width: 320px) {
+   .login-page .auth-header p {
+      font-size: 12px;
+   }
+
+   .login-page .forgot-password-row,
+   .login-page .auth-switch {
+      font-size: 12px;
+   }
+}
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+   .login-page * {
+      transition: none !important;
+      animation: none !important;
+   }
+}
