@@ -1,3 +1,4 @@
+
 import {
    useEffect,
    useRef,
@@ -44,6 +45,12 @@ function ChatWindow({
    // ==========================================
 
    onExportChat,
+
+   // ==========================================
+   // MOBILE NAVIGATION
+   // ==========================================
+
+   onBackToChats,
 
 }) {
 
@@ -342,6 +349,27 @@ function ChatWindow({
 
 
    // ==========================================
+   // MOBILE BACK TO CHATS
+   // ==========================================
+
+   const handleBackToChats = () => {
+
+      if (
+         typeof onBackToChats !==
+         "function"
+      ) {
+
+         return;
+
+      }
+
+
+      onBackToChats();
+
+   };
+
+
+   // ==========================================
    // RENDER
    // ==========================================
 
@@ -362,6 +390,39 @@ function ChatWindow({
             ================================== */}
 
             <div className="chat-header-left">
+
+
+               {/* ==================================
+                   MOBILE BACK TO CHATS
+               ================================== */}
+
+               {typeof onBackToChats ===
+                  "function" && (
+
+                     <button
+                        type="button"
+                        className="mobile-back-to-chats"
+                        onClick={
+                           handleBackToChats
+                        }
+                        aria-label="Back to chats"
+                        title="Back to chats"
+                     >
+
+                        <span
+                           aria-hidden="true"
+                        >
+                           ←
+                        </span>
+
+                        <span>
+                           Chats
+                        </span>
+
+                     </button>
+
+                  )}
+
 
                <div className="chat-title-icon">
 
@@ -724,7 +785,7 @@ function ChatWindow({
 
                      key={
                         message.id ||
-                        `${message.role}-${index}`
+                        `${message.role} -${index} `
                      }
 
 
@@ -753,7 +814,7 @@ function ChatWindow({
                      }
 
 
-                     /* 
+                     /*
                         ==================================
                         FEEDBACK DATA
                         ==================================
@@ -877,3 +938,4 @@ function ChatWindow({
 
 
 export default ChatWindow;
+

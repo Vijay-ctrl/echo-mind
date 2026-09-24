@@ -59,6 +59,108 @@ function Chat() {
 
 
    // ==========================================
+   // MOBILE CHAT NAVIGATION
+   // ==========================================
+   //
+   // On desktop the sidebar and chat window remain
+   // visible together. On smaller screens Chat.css
+   // uses this state to slide between the two views.
+   //
+   // ==========================================
+
+   const [mobileView, setMobileView] =
+      useState("sidebar");
+
+   const [touchStart, setTouchStart] =
+      useState(null);
+
+
+   // ==========================================
+   // MOBILE NAVIGATION HELPERS
+   // ==========================================
+
+   const showMobileChat = () => {
+
+      setMobileView("chat");
+
+   };
+
+
+   const showMobileSidebar = () => {
+
+      setMobileView("sidebar");
+
+   };
+
+
+   // ==========================================
+   // MOBILE SWIPE NAVIGATION
+   // ==========================================
+
+   const handleTouchStart = (event) => {
+
+      if (window.innerWidth > 760) {
+         return;
+      }
+
+      const touch = event.touches?.[0];
+
+      if (!touch) {
+         return;
+      }
+
+      setTouchStart({
+         x: touch.clientX,
+         y: touch.clientY,
+      });
+
+   };
+
+
+   const handleTouchEnd = (event) => {
+
+      if (window.innerWidth > 760 || !touchStart) {
+         return;
+      }
+
+      const touch = event.changedTouches?.[0];
+
+      if (!touch) {
+         setTouchStart(null);
+         return;
+      }
+
+      const deltaX =
+         touch.clientX - touchStart.x;
+
+      const deltaY =
+         touch.clientY - touchStart.y;
+
+      const minimumSwipeDistance = 70;
+
+      setTouchStart(null);
+
+      // Ignore mostly vertical gestures so normal
+      // message scrolling remains unaffected.
+      if (Math.abs(deltaX) <= Math.abs(deltaY)) {
+         return;
+      }
+
+      if (Math.abs(deltaX) < minimumSwipeDistance) {
+         return;
+      }
+
+      if (deltaX < 0) {
+         showMobileChat();
+         return;
+      }
+
+      showMobileSidebar();
+
+   };
+
+
+   // ==========================================
    // TEMPORARY CHAT STATE
    // ==========================================
 
@@ -877,6 +979,9 @@ function Chat() {
 
       resetCurrentChat();
 
+      // A new chat opens the chat view on mobile.
+      showMobileChat();
+
    };
 
 
@@ -917,6 +1022,10 @@ function Chat() {
       setMessages([]);
 
       setCurrentChatId(null);
+
+      // Temporary chat also opens directly in the chat
+      // view on mobile.
+      showMobileChat();
 
       setMemoryStatus({
 
@@ -1393,6 +1502,12 @@ function Chat() {
             setCurrentChatId(
                chat.id
             );
+
+
+            // On mobile, move from the conversation
+            // list to the selected chat after it has
+            // been loaded successfully.
+            showMobileChat();
 
 
             // ====================================
@@ -2078,7 +2193,15 @@ function Chat() {
 
    return (
 
-      <div className="app-layout">
+      <div
+         className={`app-layout mobile-view-${mobileView}`}
+         onTouchStart={
+            handleTouchStart
+         }
+         onTouchEnd={
+            handleTouchEnd
+         }
+      >
 
 
          {/* =====================================
