@@ -1,12 +1,17 @@
 /* =========================================
    LOGIN PAGE
+
    Login-specific styles only.
    Shared authentication styles are in Auth.css.
 ========================================= */
 
 .login-page {
    width: 100%;
+   max-width: 100%;
+   min-width: 0;
    min-height: 100%;
+   box-sizing: border-box;
+   overflow-wrap: anywhere;
 }
 
 /* =========================================
@@ -16,17 +21,31 @@
 .login-card {
    width: 100%;
    max-width: 430px;
+   min-width: 0;
+   box-sizing: border-box;
+   margin-left: auto;
+   margin-right: auto;
 }
 
 /* =========================================
    LOGIN HEADER
 ========================================= */
 
+.login-page .auth-header {
+   width: 100%;
+   min-width: 0;
+   box-sizing: border-box;
+}
+
 .login-page .auth-header p {
+   width: 100%;
    max-width: 360px;
+   min-width: 0;
    margin-left: auto;
    margin-right: auto;
    line-height: 1.55;
+   overflow-wrap: anywhere;
+   word-break: break-word;
 }
 
 /* =========================================
@@ -35,12 +54,33 @@
 
 .login-page .auth-form {
    width: 100%;
+   max-width: 100%;
+   min-width: 0;
+   box-sizing: border-box;
 }
 
-/* Keep the forgot-password link visually
-   connected to the password field */
+/* =========================================
+   FORGOT PASSWORD ROW
+
+   Keep the forgot-password link visually
+   connected to the password field.
+========================================= */
+
 .login-page .forgot-password-row {
+   width: 100%;
+   min-width: 0;
    margin-top: -2px;
+   box-sizing: border-box;
+}
+
+/* =========================================
+   FORGOT PASSWORD LINK
+========================================= */
+
+.login-page .forgot-password-row a {
+   max-width: 100%;
+   overflow-wrap: anywhere;
+   word-break: break-word;
 }
 
 /* =========================================
@@ -49,6 +89,17 @@
 
 .login-page .password-input-wrapper {
    width: 100%;
+   max-width: 100%;
+   min-width: 0;
+   position: relative;
+   box-sizing: border-box;
+}
+
+.login-page .password-input-wrapper input {
+   width: 100%;
+   max-width: 100%;
+   min-width: 0;
+   box-sizing: border-box;
 }
 
 /* =========================================
@@ -57,7 +108,11 @@
 
 .login-page .auth-error {
    width: 100%;
+   max-width: 100%;
+   min-width: 0;
+   box-sizing: border-box;
    overflow-wrap: anywhere;
+   word-break: break-word;
 }
 
 /* =========================================
@@ -66,6 +121,16 @@
 
 .login-page .auth-submit {
    width: 100%;
+   max-width: 100%;
+   min-width: 0;
+   box-sizing: border-box;
+}
+
+/* Prevent button text from forcing overflow */
+.login-page .auth-submit span,
+.login-page .auth-submit {
+   overflow-wrap: anywhere;
+   word-break: break-word;
 }
 
 /* =========================================
@@ -74,16 +139,47 @@
 
 .login-page .auth-switch {
    width: 100%;
+   max-width: 100%;
+   min-width: 0;
+   box-sizing: border-box;
    text-align: center;
+   overflow-wrap: anywhere;
+   word-break: break-word;
+}
+
+.login-page .auth-switch a {
+   max-width: 100%;
+   overflow-wrap: anywhere;
+   word-break: break-word;
+}
+
+/* =========================================
+   GENERAL LOGIN CONTENT SAFETY
+========================================= */
+
+.login-page h1,
+.login-page h2,
+.login-page h3,
+.login-page p,
+.login-page span,
+.login-page a,
+.login-page label,
+.login-page button,
+.login-page input {
+   max-width: 100%;
+   overflow-wrap: anywhere;
 }
 
 /* =========================================
    TABLET
+   <= 768px
 ========================================= */
 
 @media (max-width: 768px) {
+
    .login-card {
       width: min(100%, 430px);
+      max-width: 430px;
    }
 
    .login-page .auth-header p {
@@ -93,29 +189,58 @@
 
 /* =========================================
    MOBILE
+   <= 480px
 ========================================= */
 
 @media (max-width: 480px) {
+
+   .login-page {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+   }
+
    .login-card {
       width: 100%;
       max-width: 430px;
+      min-width: 0;
+   }
+
+   .login-page .auth-header {
+      width: 100%;
    }
 
    .login-page .auth-header p {
+      width: 100%;
       max-width: 100%;
       line-height: 1.5;
    }
 
+   .login-page .auth-form {
+      width: 100%;
+   }
+
    .login-page .auth-switch {
+      width: 100%;
       line-height: 1.5;
+   }
+
+   .login-page .forgot-password-row {
+      width: 100%;
    }
 }
 
 /* =========================================
    SMALL MOBILE
+   <= 360px
 ========================================= */
 
 @media (max-width: 360px) {
+
+   .login-card {
+      max-width: 100%;
+   }
+
    .login-page .auth-header p {
       font-size: 13px;
    }
@@ -127,13 +252,20 @@
    .login-page .auth-switch {
       font-size: 13px;
    }
+
+   .login-page .auth-submit {
+      padding-left: 12px;
+      padding-right: 12px;
+   }
 }
 
 /* =========================================
    VERY SMALL DEVICES
+   <= 320px
 ========================================= */
 
 @media (max-width: 320px) {
+
    .login-page .auth-header p {
       font-size: 12px;
    }
@@ -142,6 +274,30 @@
    .login-page .auth-switch {
       font-size: 12px;
    }
+
+   .login-page .auth-submit {
+      padding-left: 10px;
+      padding-right: 10px;
+   }
+
+   .login-page .password-input-wrapper input {
+      min-width: 0;
+   }
+}
+
+/* =========================================
+   TOUCH DEVICES
+
+   Remove hover-dependent visual assumptions
+   on touch screens.
+========================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+   .login-page .forgot-password-row a:hover,
+   .login-page .auth-switch a:hover {
+      text-decoration: none;
+   }
 }
 
 /* =========================================
@@ -149,8 +305,12 @@
 ========================================= */
 
 @media (prefers-reduced-motion: reduce) {
-   .login-page * {
+
+   .login-page *,
+   .login-page *::before,
+   .login-page *::after {
       transition: none !important;
       animation: none !important;
+      scroll-behavior: auto !important;
    }
 }

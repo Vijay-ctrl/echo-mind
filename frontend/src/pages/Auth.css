@@ -4,13 +4,18 @@
 
 .auth-page {
    width: 100%;
+   min-width: 0;
+   min-height: 100vh;
    min-height: 100dvh;
 
    display: flex;
    align-items: center;
    justify-content: center;
 
-   padding: 24px;
+   box-sizing: border-box;
+
+   padding:
+      max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
 
    background:
       radial-gradient(circle at top,
@@ -20,6 +25,8 @@
 
    overflow-x: hidden;
    overflow-y: auto;
+
+   -webkit-overflow-scrolling: touch;
 }
 
 
@@ -28,9 +35,15 @@
 ========================================= */
 
 .auth-card {
-   width: min(100%, 430px);
+   width: 100%;
+   max-width: 430px;
+   min-width: 0;
+
+   margin: auto;
 
    padding: 36px;
+
+   box-sizing: border-box;
 
    border: 1px solid rgba(255, 255, 255, 0.08);
    border-radius: 20px;
@@ -52,7 +65,11 @@
 ========================================= */
 
 .auth-header {
+   width: 100%;
+   min-width: 0;
+
    margin-bottom: 30px;
+
    text-align: center;
 }
 
@@ -66,6 +83,10 @@
    align-items: center;
    justify-content: center;
 
+   flex-shrink: 0;
+
+   box-sizing: border-box;
+
    border-radius: 16px;
 
    background:
@@ -77,11 +98,11 @@
 
    box-shadow:
       0 10px 30px rgba(99, 102, 241, 0.25);
-
-   flex-shrink: 0;
 }
 
 .auth-header h1 {
+   min-width: 0;
+
    margin: 0 0 10px;
 
    color: #ffffff;
@@ -89,14 +110,16 @@
    font-size: 28px;
    line-height: 1.25;
    font-weight: 700;
-
    letter-spacing: -0.02em;
 
    overflow-wrap: anywhere;
+   word-break: break-word;
 }
 
 .auth-header p {
+   width: 100%;
    max-width: 340px;
+   min-width: 0;
 
    margin: 0 auto;
 
@@ -106,6 +129,7 @@
    line-height: 1.6;
 
    overflow-wrap: anywhere;
+   word-break: break-word;
 }
 
 
@@ -115,29 +139,38 @@
 
 .auth-form {
    width: 100%;
+   min-width: 0;
 
    display: flex;
    flex-direction: column;
 
    gap: 20px;
+
+   box-sizing: border-box;
 }
 
 .form-group {
    width: 100%;
+   min-width: 0;
 
    display: flex;
    flex-direction: column;
 
    gap: 8px;
+
+   box-sizing: border-box;
 }
 
 .form-group label {
+   min-width: 0;
+
    color: #e5e7eb;
 
    font-size: 14px;
    font-weight: 500;
-
    line-height: 1.4;
+
+   overflow-wrap: anywhere;
 }
 
 
@@ -149,6 +182,10 @@
    width: 100%;
    min-width: 0;
    min-height: 46px;
+
+   display: block;
+
+   box-sizing: border-box;
 
    padding: 13px 14px;
 
@@ -171,10 +208,13 @@
 
    -webkit-appearance: none;
    appearance: none;
+
+   -webkit-tap-highlight-color: transparent;
 }
 
 .form-group input::placeholder {
    color: #6b7280;
+   opacity: 1;
 }
 
 .form-group input:hover:not(:disabled) {
@@ -202,11 +242,17 @@
 
 .password-input-wrapper {
    position: relative;
+
    width: 100%;
+   min-width: 0;
+
+   box-sizing: border-box;
 }
 
 .password-input-wrapper input {
    width: 100%;
+   min-width: 0;
+
    padding-right: 52px;
 }
 
@@ -227,6 +273,8 @@
    display: flex;
    align-items: center;
    justify-content: center;
+
+   box-sizing: border-box;
 
    padding: 0;
 
@@ -250,7 +298,8 @@
 .password-toggle:hover:not(:disabled) {
    color: #e5e7eb;
 
-   background: rgba(255, 255, 255, 0.06);
+   background:
+      rgba(255, 255, 255, 0.06);
 }
 
 .password-toggle:focus-visible {
@@ -269,24 +318,34 @@
 ========================================= */
 
 .forgot-password-row {
+   width: 100%;
+   min-width: 0;
+
    display: flex;
    justify-content: flex-end;
+   align-items: center;
 
    margin-top: -8px;
    margin-bottom: 8px;
+
+   box-sizing: border-box;
 }
 
 .forgot-password-row a {
+   max-width: 100%;
+
    color: #818cf8;
 
    font-size: 14px;
    font-weight: 500;
-
    line-height: 1.4;
 
    text-decoration: none;
 
-   transition: color 0.2s ease;
+   overflow-wrap: anywhere;
+
+   transition:
+      color 0.2s ease;
 }
 
 .forgot-password-row a:hover {
@@ -308,21 +367,28 @@
 
 .auth-error {
    width: 100%;
+   min-width: 0;
+
+   box-sizing: border-box;
 
    padding: 11px 12px;
 
    border: 1px solid rgba(239, 68, 68, 0.25);
    border-radius: 9px;
 
-   background: rgba(239, 68, 68, 0.08);
+   background:
+      rgba(239, 68, 68, 0.08);
+
    color: #fca5a5;
 
    font-size: 13px;
    line-height: 1.5;
 
    overflow-wrap: anywhere;
+   word-break: break-word;
 
-   animation: authErrorIn 0.2s ease-out;
+   animation:
+      authErrorIn 0.2s ease-out;
 }
 
 
@@ -332,6 +398,7 @@
 
 .auth-submit {
    width: 100%;
+   min-width: 0;
    min-height: 46px;
 
    display: flex;
@@ -339,6 +406,8 @@
    justify-content: center;
 
    gap: 8px;
+
+   box-sizing: border-box;
 
    padding: 13px 16px;
 
@@ -390,14 +459,19 @@
    width: 16px;
    height: 16px;
 
-   flex-shrink: 0;
+   flex: 0 0 16px;
+
+   box-sizing: border-box;
 
    border: 2px solid rgba(255, 255, 255, 0.35);
    border-top-color: #ffffff;
 
    border-radius: 50%;
 
-   animation: authSpin 0.7s linear infinite;
+   animation:
+      authSpin 0.7s linear infinite;
+
+   will-change: transform;
 }
 
 
@@ -406,31 +480,40 @@
 ========================================= */
 
 .auth-divider {
+   width: 100%;
+   min-width: 0;
+
    display: flex;
    align-items: center;
 
    gap: 12px;
 
    margin: 24px 0;
+
+   box-sizing: border-box;
 }
 
 .auth-divider::before,
 .auth-divider::after {
    content: "";
 
-   flex: 1;
+   flex: 1 1 auto;
 
+   min-width: 0;
    height: 1px;
 
    background: #272733;
 }
 
 .auth-divider span {
-   flex-shrink: 0;
+   flex: 0 0 auto;
 
    color: #6b7280;
 
    font-size: 12px;
+   line-height: 1.4;
+
+   white-space: nowrap;
 }
 
 
@@ -439,6 +522,9 @@
 ========================================= */
 
 .auth-switch {
+   width: 100%;
+   min-width: 0;
+
    margin: 0;
 
    text-align: center;
@@ -447,6 +533,8 @@
 
    font-size: 14px;
    line-height: 1.5;
+
+   overflow-wrap: anywhere;
 }
 
 .auth-switch a {
@@ -456,7 +544,8 @@
 
    text-decoration: none;
 
-   transition: color 0.2s ease;
+   transition:
+      color 0.2s ease;
 
    overflow-wrap: anywhere;
 }
@@ -512,8 +601,10 @@
 ========================================= */
 
 @media (max-width: 768px) {
+
    .auth-page {
-      padding: 20px;
+      padding:
+         max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
    }
 
    .auth-card {
@@ -527,15 +618,21 @@
 ========================================= */
 
 @media (max-width: 480px) {
+
    .auth-page {
+      min-height: 100vh;
       min-height: 100dvh;
 
-      padding: 32px 16px;
-
       align-items: flex-start;
+
+      padding:
+         max(32px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(32px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
    }
 
    .auth-card {
+      width: 100%;
+      max-width: 430px;
+
       padding: 28px 20px;
 
       border-radius: 17px;
@@ -568,6 +665,11 @@
 
    .form-group input {
       min-height: 48px;
+
+      /*
+         16px prevents automatic zoom on
+         many mobile browsers.
+      */
       font-size: 16px;
    }
 
@@ -600,8 +702,10 @@
 ========================================= */
 
 @media (max-width: 360px) {
+
    .auth-page {
-      padding: 24px 12px;
+      padding:
+         max(24px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
    }
 
    .auth-card {
@@ -637,9 +741,13 @@
 ========================================= */
 
 @media (max-width: 320px) {
+
    .auth-page {
-      padding-left: 8px;
-      padding-right: 8px;
+      padding-left:
+         max(8px, env(safe-area-inset-left));
+
+      padding-right:
+         max(8px, env(safe-area-inset-right));
    }
 
    .auth-card {
@@ -658,14 +766,199 @@
 
 
 /* =========================================
+   EXTREMELY SMALL DEVICES
+========================================= */
+
+@media (max-width: 280px) {
+
+   .auth-page {
+      padding-left: 6px;
+      padding-right: 6px;
+   }
+
+   .auth-card {
+      padding: 20px 12px;
+      border-radius: 13px;
+   }
+
+   .auth-logo {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+   }
+
+   .auth-header h1 {
+      font-size: 20px;
+   }
+
+   .auth-header p {
+      font-size: 12px;
+   }
+
+   .form-group label {
+      font-size: 13px;
+   }
+
+   .form-group input {
+      padding-left: 11px;
+      padding-right: 11px;
+   }
+
+   .password-input-wrapper input {
+      padding-right: 48px;
+   }
+
+   .password-toggle {
+      right: 4px;
+      width: 38px;
+      height: 38px;
+   }
+
+   .auth-submit {
+      padding-left: 12px;
+      padding-right: 12px;
+      font-size: 14px;
+   }
+
+   .auth-divider {
+      gap: 8px;
+   }
+
+   .auth-switch {
+      font-size: 12px;
+   }
+}
+
+
+/* =========================================
+   LANDSCAPE MOBILE
+========================================= */
+
+@media (max-height: 520px) and (orientation: landscape) {
+
+   .auth-page {
+      align-items: flex-start;
+
+      padding-top:
+         max(16px, env(safe-area-inset-top));
+
+      padding-bottom:
+         max(16px, env(safe-area-inset-bottom));
+   }
+
+   .auth-card {
+      margin-top: 0;
+      margin-bottom: 0;
+
+      padding-top: 22px;
+      padding-bottom: 22px;
+   }
+
+   .auth-header {
+      margin-bottom: 20px;
+   }
+
+   .auth-logo {
+      width: 44px;
+      height: 44px;
+
+      margin-bottom: 12px;
+
+      border-radius: 12px;
+   }
+
+   .auth-header h1 {
+      font-size: 22px;
+   }
+}
+
+
+/* =========================================
+   TOUCH DEVICES
+========================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+   .auth-submit:hover:not(:disabled) {
+      background: #6366f1;
+      transform: none;
+      box-shadow: none;
+   }
+
+   .password-toggle:hover:not(:disabled) {
+      color: #9ca3af;
+      background: transparent;
+   }
+
+   .forgot-password-row a:hover,
+   .auth-switch a:hover {
+      text-decoration: none;
+   }
+
+   .form-group input:hover:not(:disabled) {
+      border-color: #2a2a3a;
+   }
+}
+
+
+/* =========================================
+   FORCED COLORS / HIGH CONTRAST
+========================================= */
+
+@media (forced-colors: active) {
+
+   .auth-card {
+      border-color: CanvasText;
+      background: Canvas;
+      color: CanvasText;
+
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+   }
+
+   .auth-header h1,
+   .form-group label,
+   .auth-submit {
+      color: CanvasText;
+   }
+
+   .form-group input {
+      border-color: CanvasText;
+      background: Canvas;
+      color: CanvasText;
+   }
+
+   .auth-submit {
+      border: 1px solid CanvasText;
+      background: Highlight;
+      color: HighlightText;
+   }
+
+   .auth-submit:focus-visible,
+   .password-toggle:focus-visible,
+   .forgot-password-row a:focus-visible,
+   .auth-switch a:focus-visible {
+      outline-color: Highlight;
+   }
+}
+
+
+/* =========================================
    REDUCED MOTION
 ========================================= */
 
 @media (prefers-reduced-motion: reduce) {
 
+   .auth-page *,
+   .auth-page *::before,
+   .auth-page *::after {
+      scroll-behavior: auto;
+   }
+
    .auth-submit,
    .form-group input,
    .auth-switch a,
+   .forgot-password-row a,
    .password-toggle {
       transition: none;
    }
@@ -680,5 +973,6 @@
 
    .auth-spinner {
       animation: none;
+      transform: none;
    }
 }

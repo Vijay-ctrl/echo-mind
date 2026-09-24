@@ -5,9 +5,10 @@
 .input-container {
    width: 100%;
    max-width: 940px;
-   flex-shrink: 0;
-
+   min-width: 0;
+   flex: 0 0 auto;
    margin: 0 auto;
+
    padding: 13px 26px 20px;
 
    box-sizing: border-box;
@@ -16,6 +17,13 @@
       linear-gradient(180deg,
          rgba(11, 13, 18, 0),
          #0b0d12 25%);
+
+   /* Prevent horizontal overflow */
+   overflow: visible;
+
+   /* Mobile safe-area support */
+   padding-bottom:
+      max(20px, env(safe-area-inset-bottom));
 }
 
 
@@ -26,6 +34,7 @@
 .message-input-wrapper {
    width: 100%;
    min-width: 0;
+   max-width: 100%;
 
    display: flex;
    align-items: flex-end;
@@ -51,6 +60,9 @@
       border-color 0.2s ease,
       box-shadow 0.2s ease,
       background 0.2s ease;
+
+   /* Prevent children from creating horizontal overflow */
+   overflow: hidden;
 }
 
 
@@ -76,21 +88,27 @@
 .message-input {
    flex: 1 1 auto;
 
-   width: 100%;
+   width: 0;
    min-width: 0;
+   max-width: 100%;
 
    min-height: 38px;
    max-height: 150px;
 
    padding: 9px 0;
 
+   box-sizing: border-box;
+
    resize: none;
+
+   overflow-x: hidden;
    overflow-y: auto;
 
    border: 0;
    outline: 0;
 
    color: #e9ebef;
+
    background: transparent;
 
    font-family: inherit;
@@ -98,8 +116,16 @@
    line-height: 1.5;
 
    scrollbar-width: thin;
+
    scrollbar-color:
       #343a45 transparent;
+
+   /* Prevent long unbroken text from expanding layout */
+   overflow-wrap: anywhere;
+   word-break: break-word;
+
+   /* Better touch interaction */
+   touch-action: manipulation;
 }
 
 
@@ -118,6 +144,10 @@
 .message-input::-webkit-scrollbar-thumb {
    border-radius: 999px;
    background: #343a45;
+}
+
+.message-input::-webkit-scrollbar-thumb:hover {
+   background: #414957;
 }
 
 
@@ -149,6 +179,9 @@
    width: 38px;
    height: 38px;
 
+   min-width: 38px;
+   min-height: 38px;
+
    flex: 0 0 38px;
 
    display: flex;
@@ -157,7 +190,10 @@
 
    padding: 0;
 
+   box-sizing: border-box;
+
    border: 1px solid rgba(255, 255, 255, 0.05);
+
    border-radius: 10px;
 
    color: #e8eaee;
@@ -168,6 +204,10 @@
          #222832);
 
    cursor: pointer;
+
+   user-select: none;
+
+   -webkit-tap-highlight-color: transparent;
 
    transition:
       background 0.18s ease,
@@ -216,6 +256,10 @@
    SEND BUTTON FOCUS
 ========================================= */
 
+.send-btn:focus {
+   outline: none;
+}
+
 .send-btn:focus-visible {
    outline: 2px solid rgba(165, 180, 252, 0.7);
    outline-offset: 3px;
@@ -229,6 +273,7 @@
 .input-footer {
    width: 100%;
    min-width: 0;
+   max-width: 100%;
 
    display: flex;
    align-items: center;
@@ -237,7 +282,12 @@
    gap: 12px;
 
    margin-top: 7px;
+
    min-height: 14px;
+
+   box-sizing: border-box;
+
+   overflow: hidden;
 }
 
 
@@ -246,7 +296,10 @@
 ========================================= */
 
 .input-hint {
+   flex: 1 1 auto;
+
    min-width: 0;
+   max-width: 100%;
 
    margin: 0;
 
@@ -258,6 +311,7 @@
    text-align: left;
 
    overflow-wrap: anywhere;
+   word-break: break-word;
 }
 
 
@@ -268,12 +322,16 @@
 .character-count {
    flex: 0 0 auto;
 
+   max-width: 40%;
+
    color: #606773;
 
    font-size: 9.5px;
    line-height: 1.4;
 
    font-variant-numeric: tabular-nums;
+
+   white-space: nowrap;
 
    user-select: none;
 
@@ -297,6 +355,7 @@
 
 .character-count.character-limit {
    color: #c4c9d1;
+
    font-weight: 600;
 }
 
@@ -306,9 +365,17 @@
 ========================================= */
 
 @media (max-width: 800px) {
+
    .input-container {
       padding-left: 18px;
       padding-right: 18px;
+
+      padding-bottom:
+         max(18px, env(safe-area-inset-bottom));
+   }
+
+   .message-input-wrapper {
+      gap: 7px;
    }
 }
 
@@ -318,9 +385,15 @@
 ========================================= */
 
 @media (max-width: 620px) {
+
    .input-container {
-      padding: 11px 14px 16px;
+      width: 100%;
+      max-width: 100%;
+
+      padding:
+         11px 14px max(16px, env(safe-area-inset-bottom));
    }
+
 
    .message-input-wrapper {
       gap: 7px;
@@ -331,33 +404,47 @@
       border-radius: 13px;
    }
 
+
    .message-input {
       min-height: 38px;
 
       padding: 8px 0;
 
+      /* Prevent iOS Safari zoom */
       font-size: 16px;
+
       line-height: 1.45;
    }
+
 
    .send-btn {
       width: 40px;
       height: 40px;
+
+      min-width: 40px;
+      min-height: 40px;
+
       flex-basis: 40px;
 
       border-radius: 10px;
    }
 
+
    .input-footer {
       margin-top: 6px;
    }
+
 
    .input-hint {
       display: none;
    }
 
+
    .character-count {
+      max-width: 100%;
+
       margin-left: auto;
+
       font-size: 9px;
    }
 }
@@ -368,9 +455,12 @@
 ========================================= */
 
 @media (max-width: 400px) {
+
    .input-container {
-      padding: 9px 10px 12px;
+      padding:
+         9px 10px max(12px, env(safe-area-inset-bottom));
    }
+
 
    .message-input-wrapper {
       gap: 6px;
@@ -380,17 +470,24 @@
       border-radius: 12px;
    }
 
+
    .message-input {
       min-height: 38px;
 
       font-size: 16px;
    }
 
+
    .send-btn {
       width: 38px;
       height: 38px;
+
+      min-width: 38px;
+      min-height: 38px;
+
       flex-basis: 38px;
    }
+
 
    .character-count {
       font-size: 8.5px;
@@ -403,21 +500,89 @@
 ========================================= */
 
 @media (max-width: 360px) {
+
    .input-container {
       padding-left: 8px;
       padding-right: 8px;
-      padding-bottom: 10px;
+
+      padding-bottom:
+         max(10px, env(safe-area-inset-bottom));
    }
+
 
    .message-input-wrapper {
       gap: 5px;
+
       padding-left: 9px;
+      padding-right: 6px;
    }
+
 
    .send-btn {
       width: 38px;
       height: 38px;
+
+      min-width: 38px;
+      min-height: 38px;
+
       flex-basis: 38px;
+   }
+
+
+   .message-input {
+      min-width: 0;
+
+      padding-top: 8px;
+      padding-bottom: 8px;
+   }
+}
+
+
+/* =========================================
+   EXTREMELY NARROW DEVICES
+========================================= */
+
+@media (max-width: 320px) {
+
+   .input-container {
+      padding-left: 6px;
+      padding-right: 6px;
+   }
+
+
+   .message-input-wrapper {
+      gap: 4px;
+
+      padding-left: 8px;
+      padding-right: 5px;
+
+      border-radius: 11px;
+   }
+
+
+   .send-btn {
+      width: 36px;
+      height: 36px;
+
+      min-width: 36px;
+      min-height: 36px;
+
+      flex-basis: 36px;
+
+      border-radius: 9px;
+   }
+
+
+   .message-input {
+      min-height: 36px;
+
+      padding-top: 7px;
+      padding-bottom: 7px;
+   }
+
+
+   .character-count {
+      font-size: 8px;
    }
 }
 
@@ -427,6 +592,7 @@
 ========================================= */
 
 @media (hover: none) and (pointer: coarse) {
+
    .send-btn:hover:not(:disabled) {
       background:
          linear-gradient(145deg,
@@ -436,6 +602,7 @@
       box-shadow: none;
    }
 
+
    .send-btn:active:not(:disabled) {
       transform: scale(0.96);
 
@@ -443,6 +610,12 @@
          linear-gradient(145deg,
             #343b47,
             #2b323d);
+   }
+
+
+   .message-input {
+      /* Allow normal vertical textarea scrolling */
+      touch-action: pan-y;
    }
 }
 
@@ -459,7 +632,75 @@
       transition: none;
    }
 
+
    .send-btn:active:not(:disabled) {
       transform: none;
+   }
+}
+
+
+/* =========================================
+   HIGH CONTRAST / FORCED COLORS
+========================================= */
+
+@media (forced-colors: active) {
+
+   .message-input-wrapper {
+      border: 1px solid CanvasText;
+      background: Canvas;
+   }
+
+
+   .message-input {
+      color: CanvasText;
+      background: Canvas;
+   }
+
+
+   .message-input::placeholder {
+      color: GrayText;
+   }
+
+
+   .send-btn {
+      color: ButtonText;
+      background: ButtonFace;
+      border: 1px solid ButtonText;
+   }
+
+
+   .send-btn:disabled {
+      color: GrayText;
+      border-color: GrayText;
+   }
+}
+
+
+/* =========================================
+   SAFARI / IOS TEXTAREA FIX
+========================================= */
+
+@supports (-webkit-touch-callout: none) {
+
+   .message-input {
+      -webkit-appearance: none;
+      border-radius: 0;
+   }
+
+
+   .send-btn {
+      -webkit-appearance: none;
+   }
+}
+
+
+/* =========================================
+   PRINT
+========================================= */
+
+@media print {
+
+   .input-container {
+      display: none;
    }
 }

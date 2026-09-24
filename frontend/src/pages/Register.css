@@ -1,12 +1,18 @@
 /* =========================================
    REGISTER PAGE
+
+   Register-specific styles only.
+   Shared authentication styles are in Auth.css.
 ========================================= */
 
 .register-page {
    width: 100%;
+   max-width: 100%;
+   min-width: 0;
    min-height: 100%;
+   box-sizing: border-box;
+   overflow-wrap: anywhere;
 }
-
 
 /* =========================================
    REGISTER CARD
@@ -15,46 +21,219 @@
 .register-card {
    width: 100%;
    max-width: 430px;
+   min-width: 0;
+   margin-left: auto;
+   margin-right: auto;
+   box-sizing: border-box;
 }
 
+/* =========================================
+   REGISTER HEADER
+========================================= */
+
+.register-page .auth-header {
+   width: 100%;
+   min-width: 0;
+   box-sizing: border-box;
+}
+
+.register-page .auth-header h1,
+.register-page .auth-header p {
+   max-width: 100%;
+   overflow-wrap: anywhere;
+   word-break: break-word;
+}
+
+/* =========================================
+   REGISTER FORM
+========================================= */
+
+.register-page .auth-form {
+   width: 100%;
+   max-width: 100%;
+   min-width: 0;
+   box-sizing: border-box;
+}
+
+/* =========================================
+   FORM GROUP
+========================================= */
+
+.register-page .form-group {
+   width: 100%;
+   max-width: 100%;
+   min-width: 0;
+   box-sizing: border-box;
+}
+
+.register-page .form-group label {
+   max-width: 100%;
+   overflow-wrap: anywhere;
+   word-break: break-word;
+}
+
+/* =========================================
+   FORM INPUTS
+========================================= */
+
+.register-page .form-group input {
+   width: 100%;
+   max-width: 100%;
+   min-width: 0;
+   box-sizing: border-box;
+}
+
+/* =========================================
+   PASSWORD INPUT
+========================================= */
+
+.register-page .password-input-wrapper {
+   width: 100%;
+   max-width: 100%;
+   min-width: 0;
+   position: relative;
+   box-sizing: border-box;
+}
+
+.register-page .password-input-wrapper input {
+   width: 100%;
+   max-width: 100%;
+   min-width: 0;
+   box-sizing: border-box;
+}
 
 /* =========================================
    PASSWORD HINT
 ========================================= */
 
 .password-hint {
+   width: 100%;
+   max-width: 100%;
+   min-width: 0;
    margin-top: -2px;
+   box-sizing: border-box;
 
    color: #6b7280;
-
    font-size: 12px;
+   font-weight: 400;
    line-height: 1.5;
 
    overflow-wrap: anywhere;
+   word-break: break-word;
 }
-
 
 /* =========================================
    INPUT VALIDATION
+
+   Scoped to register page so validation
+   styles don't affect other forms.
 ========================================= */
 
-.form-group input:invalid:not(:placeholder-shown) {
+.register-page .form-group input:invalid:not(:placeholder-shown) {
    border-color: rgba(239, 68, 68, 0.45);
 }
 
-.form-group input:valid:not(:placeholder-shown) {
+.register-page .form-group input:valid:not(:placeholder-shown) {
    border-color: rgba(34, 197, 94, 0.25);
 }
 
+/* =========================================
+   ERROR MESSAGE
+========================================= */
+
+.register-page .auth-error {
+   width: 100%;
+   max-width: 100%;
+   min-width: 0;
+   box-sizing: border-box;
+
+   overflow-wrap: anywhere;
+   word-break: break-word;
+}
+
+/* =========================================
+   SUBMIT BUTTON
+========================================= */
+
+.register-page .auth-submit {
+   width: 100%;
+   max-width: 100%;
+   min-width: 0;
+   box-sizing: border-box;
+}
+
+/* =========================================
+   ACCOUNT SWITCH
+========================================= */
+
+.register-page .auth-switch {
+   width: 100%;
+   max-width: 100%;
+   min-width: 0;
+   box-sizing: border-box;
+
+   text-align: center;
+   overflow-wrap: anywhere;
+   word-break: break-word;
+}
+
+.register-page .auth-switch a {
+   max-width: 100%;
+   overflow-wrap: anywhere;
+   word-break: break-word;
+}
+
+/* =========================================
+   GENERAL REGISTER CONTENT SAFETY
+========================================= */
+
+.register-page h1,
+.register-page h2,
+.register-page h3,
+.register-page p,
+.register-page span,
+.register-page a,
+.register-page label,
+.register-page button,
+.register-page input {
+   max-width: 100%;
+   overflow-wrap: anywhere;
+}
+
+/* =========================================
+   TABLET
+   <= 768px
+========================================= */
+
+@media (max-width: 768px) {
+
+   .register-card {
+      width: min(100%, 430px);
+      max-width: 430px;
+   }
+}
 
 /* =========================================
    MOBILE
+   <= 480px
 ========================================= */
 
 @media (max-width: 480px) {
+
+   .register-page {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+   }
+
    .register-card {
       width: 100%;
       max-width: 430px;
+      min-width: 0;
+   }
+
+   .register-page .auth-form {
+      width: 100%;
    }
 
    .password-hint {
@@ -63,24 +242,76 @@
    }
 }
 
-
 /* =========================================
    SMALL MOBILE
+   <= 360px
 ========================================= */
 
 @media (max-width: 360px) {
+
+   .register-card {
+      max-width: 100%;
+   }
+
    .password-hint {
       font-size: 11px;
+      line-height: 1.5;
+   }
+
+   .register-page .auth-submit {
+      padding-left: 12px;
+      padding-right: 12px;
    }
 }
 
+/* =========================================
+   VERY SMALL DEVICES
+   <= 320px
+========================================= */
+
+@media (max-width: 320px) {
+
+   .register-page .auth-header p {
+      font-size: 12px;
+   }
+
+   .password-hint {
+      font-size: 10.5px;
+      line-height: 1.45;
+   }
+
+   .register-page .auth-submit {
+      padding-left: 10px;
+      padding-right: 10px;
+   }
+
+   .register-page .password-input-wrapper input {
+      min-width: 0;
+   }
+}
+
+/* =========================================
+   TOUCH DEVICES
+========================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+   .register-page .auth-switch a:hover {
+      text-decoration: none;
+   }
+}
 
 /* =========================================
    REDUCED MOTION
 ========================================= */
 
 @media (prefers-reduced-motion: reduce) {
-   .form-group input {
-      transition: none;
+
+   .register-page *,
+   .register-page *::before,
+   .register-page *::after {
+      transition: none !important;
+      animation: none !important;
+      scroll-behavior: auto !important;
    }
 }
