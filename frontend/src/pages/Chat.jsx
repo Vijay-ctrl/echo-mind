@@ -1,5 +1,12 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {
+   useEffect,
+   useState,
+} from "react";
+
+import {
+   useNavigate,
+} from "react-router-dom";
+
 import "./Chat.css";
 
 import Sidebar from "../components/Sidebar";
@@ -29,150 +36,93 @@ import {
 } from "../services/auth";
 
 
+const MOBILE_BREAKPOINT = 768;
+
+
 function Chat() {
 
    // ==========================================
    // NAVIGATION
    // ==========================================
 
-   const navigate = useNavigate();
+   const navigate =
+      useNavigate();
 
 
    // ==========================================
    // STATE
    // ==========================================
 
-   const [messages, setMessages] = useState([]);
-
-   const [isLoading, setIsLoading] = useState(false);
-
-   const [regeneratingMessageId, setRegeneratingMessageId] =
-      useState(null);
-
-   const [currentChatId, setCurrentChatId] = useState(null);
-
-   const [chatHistory, setChatHistory] = useState([]);
-
-   const [isLoadingChats, setIsLoadingChats] = useState(true);
-
-   const [errorMessage, setErrorMessage] = useState("");
+   const [
+      messages,
+      setMessages,
+   ] = useState([]);
 
 
-   // ==========================================
-   // MOBILE CHAT NAVIGATION
-   // ==========================================
-   //
-   // On desktop the sidebar and chat window remain
-   // visible together. On smaller screens Chat.css
-   // uses this state to slide between the two views.
-   //
-   // ==========================================
-
-   const [mobileView, setMobileView] =
-      useState("sidebar");
-
-   const [touchStart, setTouchStart] =
-      useState(null);
+   const [
+      isLoading,
+      setIsLoading,
+   ] = useState(false);
 
 
-   // ==========================================
-   // MOBILE NAVIGATION HELPERS
-   // ==========================================
-
-   const showMobileChat = () => {
-
-      setMobileView("chat");
-
-   };
+   const [
+      regeneratingMessageId,
+      setRegeneratingMessageId,
+   ] = useState(null);
 
 
-   const showMobileSidebar = () => {
+   const [
+      currentChatId,
+      setCurrentChatId,
+   ] = useState(null);
 
-      setMobileView("sidebar");
 
-   };
+   const [
+      chatHistory,
+      setChatHistory,
+   ] = useState([]);
+
+
+   const [
+      isLoadingChats,
+      setIsLoadingChats,
+   ] = useState(true);
+
+
+   const [
+      errorMessage,
+      setErrorMessage,
+   ] = useState("");
 
 
    // ==========================================
-   // MOBILE SWIPE NAVIGATION
+   // MOBILE SIDEBAR
    // ==========================================
 
-   const handleTouchStart = (event) => {
-
-      if (window.innerWidth > 760) {
-         return;
-      }
-
-      const touch = event.touches?.[0];
-
-      if (!touch) {
-         return;
-      }
-
-      setTouchStart({
-         x: touch.clientX,
-         y: touch.clientY,
-      });
-
-   };
-
-
-   const handleTouchEnd = (event) => {
-
-      if (window.innerWidth > 760 || !touchStart) {
-         return;
-      }
-
-      const touch = event.changedTouches?.[0];
-
-      if (!touch) {
-         setTouchStart(null);
-         return;
-      }
-
-      const deltaX =
-         touch.clientX - touchStart.x;
-
-      const deltaY =
-         touch.clientY - touchStart.y;
-
-      const minimumSwipeDistance = 70;
-
-      setTouchStart(null);
-
-      // Ignore mostly vertical gestures so normal
-      // message scrolling remains unaffected.
-      if (Math.abs(deltaX) <= Math.abs(deltaY)) {
-         return;
-      }
-
-      if (Math.abs(deltaX) < minimumSwipeDistance) {
-         return;
-      }
-
-      if (deltaX < 0) {
-         showMobileChat();
-         return;
-      }
-
-      showMobileSidebar();
-
-   };
+   const [
+      isSidebarOpen,
+      setIsSidebarOpen,
+   ] = useState(false);
 
 
    // ==========================================
-   // TEMPORARY CHAT STATE
+   // TEMPORARY CHAT
    // ==========================================
 
-   const [isTemporaryChat, setIsTemporaryChat] =
-      useState(false);
+   const [
+      isTemporaryChat,
+      setIsTemporaryChat,
+   ] = useState(false);
 
 
    // ==========================================
    // CURRENT CHAT MEMORY
    // ==========================================
 
-   const [memoryStatus, setMemoryStatus] = useState({
+   const [
+      memoryStatus,
+      setMemoryStatus,
+   ] = useState({
       active: false,
       resetAt: null,
    });
@@ -182,25 +132,189 @@ function Chat() {
    // CHAT MODE
    // ==========================================
 
-   const [chatMode, setChatMode] = useState("auto");
+   const [
+      chatMode,
+      setChatMode,
+   ] = useState("auto");
 
 
    // ==========================================
    // MODAL STATE
    // ==========================================
 
-   const [modal, setModal] = useState({
+   const [
+      modal,
+      setModal,
+   ] = useState({
       isOpen: false,
       type: "delete",
       chatId: null,
    });
 
 
-   const user = getUser();
+   // ==========================================
+   // USER
+   // ==========================================
+
+   const user =
+      getUser();
 
 
    // ==========================================
-   // RESET CURRENT CHAT UI
+   // MOBILE SIDEBAR HELPERS
+   // ==========================================
+
+   const openSidebar = () => {
+
+      if (
+         isLoading ||
+         regeneratingMessageId
+      ) {
+         return;
+      }
+
+
+      // The sidebar drawer is only opened
+      // through mobile interactions.
+      if (
+         window.innerWidth >
+         MOBILE_BREAKPOINT
+      ) {
+         return;
+      }
+
+
+      setIsSidebarOpen(true);
+
+   };
+
+
+   const closeSidebar = () => {
+
+      setIsSidebarOpen(false);
+
+   };
+
+
+   const toggleSidebar = () => {
+
+      if (
+         isLoading ||
+         regeneratingMessageId
+      ) {
+         return;
+      }
+
+
+      // Do not use the mobile drawer
+      // behavior on desktop.
+      if (
+         window.innerWidth >
+         MOBILE_BREAKPOINT
+      ) {
+         return;
+      }
+
+
+      setIsSidebarOpen(
+         (previous) =>
+            !previous
+      );
+
+   };
+
+
+   // ==========================================
+   // RESPONSIVE SIDEBAR STATE
+   // ==========================================
+
+   useEffect(() => {
+
+      const mediaQuery =
+         window.matchMedia(
+            `(min-width: ${MOBILE_BREAKPOINT + 1
+            }px)`
+         );
+
+
+      const handleMediaChange =
+         (event) => {
+
+            // The sidebar is a mobile
+            // drawer. Always close it
+            // when entering desktop.
+            if (
+               event.matches
+            ) {
+
+               setIsSidebarOpen(
+                  false
+               );
+
+            }
+
+         };
+
+
+      // Initial desktop check
+      if (
+         mediaQuery.matches
+      ) {
+
+         setIsSidebarOpen(
+            false
+         );
+
+      }
+
+
+      if (
+         typeof mediaQuery.addEventListener ===
+         "function"
+      ) {
+
+         mediaQuery.addEventListener(
+            "change",
+            handleMediaChange
+         );
+
+      } else {
+
+         // Safari fallback
+         mediaQuery.addListener(
+            handleMediaChange
+         );
+
+      }
+
+
+      return () => {
+
+         if (
+            typeof mediaQuery.removeEventListener ===
+            "function"
+         ) {
+
+            mediaQuery.removeEventListener(
+               "change",
+               handleMediaChange
+            );
+
+         } else {
+
+            mediaQuery.removeListener(
+               handleMediaChange
+            );
+
+         }
+
+      };
+
+   }, []);
+
+
+   // ==========================================
+   // RESET CURRENT CHAT
    // ==========================================
 
    const resetCurrentChat = () => {
@@ -223,106 +337,96 @@ function Chat() {
    // EXIT TEMPORARY CHAT
    // ==========================================
 
-   const exitTemporaryChat = async () => {
+   const exitTemporaryChat =
+      async () => {
 
-      if (!isTemporaryChat) {
+         if (
+            !isTemporaryChat
+         ) {
 
-         resetCurrentChat();
+            resetCurrentChat();
 
-         return;
-
-      }
-
-
-      try {
-
-         /*
-            If the temporary chat has already
-            been created in the backend, delete it.
-
-            If the user has not sent any message yet,
-            currentChatId will be null and there is
-            nothing to delete.
-         */
-
-         if (currentChatId) {
-
-            console.log(
-               "🧹 Removing temporary chat:",
-               currentChatId
-            );
-
-            await deleteChat(currentChatId);
-
-            console.log(
-               "✅ Temporary chat removed."
-            );
+            return;
 
          }
 
-      } catch (error) {
 
-         console.error(
-            "Failed to remove temporary chat:",
-            error
-         );
+         try {
 
-         setErrorMessage(
-            error.message ||
-            "Failed to remove temporary chat."
-         );
+            if (
+               currentChatId
+            ) {
 
-      } finally {
+               await deleteChat(
+                  currentChatId
+               );
 
-         resetCurrentChat();
+            }
 
-      }
+         } catch (error) {
 
-   };
+            console.error(
+               "Failed to remove temporary chat:",
+               error
+            );
+
+            setErrorMessage(
+               error.message ||
+               "Failed to remove temporary chat."
+            );
+
+         } finally {
+
+            resetCurrentChat();
+
+         }
+
+      };
 
 
    // ==========================================
    // REFRESH CHAT HISTORY
    // ==========================================
 
-   const refreshChatHistory = async () => {
+   const refreshChatHistory =
+      async () => {
 
-      try {
+         try {
 
-         const updatedChats =
-            await getChats();
+            const updatedChats =
+               await getChats();
 
-         /*
-            Temporary chats should never appear
-            in persistent chat history.
-         */
 
-         const persistentChats =
-            Array.isArray(updatedChats)
-               ? updatedChats.filter(
-                  (chat) =>
-                     chat?.temporary !== true
+            const persistentChats =
+               Array.isArray(
+                  updatedChats
                )
-               : [];
+                  ? updatedChats.filter(
+                     (chat) =>
+                        chat?.temporary !== true
+                  )
+                  : [];
 
-         setChatHistory(
-            persistentChats
-         );
 
-         return updatedChats;
+            setChatHistory(
+               persistentChats
+            );
 
-      } catch (error) {
 
-         console.error(
-            "Failed to refresh chat history:",
-            error
-         );
+            return updatedChats;
 
-         return null;
+         } catch (error) {
 
-      }
+            console.error(
+               "Failed to refresh chat history:",
+               error
+            );
 
-   };
+            return null;
+
+         }
+
+      };
 
 
    // ==========================================
@@ -333,62 +437,84 @@ function Chat() {
 
       let isMounted = true;
 
-      const loadChats = async () => {
 
-         try {
+      const loadChats =
+         async () => {
 
-            setIsLoadingChats(true);
+            try {
 
-            setErrorMessage("");
-
-            const chats =
-               await getChats();
-
-            if (isMounted) {
-
-               const persistentChats =
-                  Array.isArray(chats)
-                     ? chats.filter(
-                        (chat) =>
-                           chat?.temporary !== true
-                     )
-                     : [];
-
-               setChatHistory(
-                  persistentChats
+               setIsLoadingChats(
+                  true
                );
-
-            }
-
-         } catch (error) {
-
-            console.error(
-               "Failed to load chat history:",
-               error
-            );
-
-            if (isMounted) {
 
                setErrorMessage(
-                  error.message ||
-                  "Failed to load chat history."
+                  ""
                );
 
+
+               const chats =
+                  await getChats();
+
+
+               if (
+                  isMounted
+               ) {
+
+                  const persistentChats =
+                     Array.isArray(
+                        chats
+                     )
+                        ? chats.filter(
+                           (chat) =>
+                              chat?.temporary !== true
+                        )
+                        : [];
+
+
+                  setChatHistory(
+                     persistentChats
+                  );
+
+               }
+
+            } catch (error) {
+
+               console.error(
+                  "Failed to load chat history:",
+                  error
+               );
+
+
+               if (
+                  isMounted
+               ) {
+
+                  setErrorMessage(
+                     error.message ||
+                     "Failed to load chat history."
+                  );
+
+               }
+
+            } finally {
+
+               if (
+                  isMounted
+               ) {
+
+                  setIsLoadingChats(
+                     false
+                  );
+
+               }
+
             }
 
-         } finally {
+         };
 
-            if (isMounted) {
-
-               setIsLoadingChats(false);
-
-            }
-
-         }
-
-      };
 
       loadChats();
+
 
       return () => {
 
@@ -403,212 +529,94 @@ function Chat() {
    // CHANGE CHAT MODE
    // ==========================================
 
-   const handleModeChange = (mode) => {
+   const handleModeChange =
+      (mode) => {
 
-      if (
-         isLoading ||
-         regeneratingMessageId
-      ) {
+         if (
+            isLoading ||
+            regeneratingMessageId
+         ) {
 
-         return;
+            return;
 
-      }
+         }
 
-      const allowedModes = [
-         "auto",
-         "gemini",
-         "web",
-      ];
 
-      if (
-         !allowedModes.includes(mode)
-      ) {
+         const allowedModes = [
+            "auto",
+            "gemini",
+            "web",
+         ];
 
-         console.error(
-            "Invalid chat mode:",
+
+         if (
+            !allowedModes.includes(
+               mode
+            )
+         ) {
+
+            console.error(
+               "Invalid chat mode:",
+               mode
+            );
+
+            return;
+
+         }
+
+
+         setChatMode(
             mode
          );
 
-         return;
+         setErrorMessage(
+            ""
+         );
 
-      }
-
-      console.log(
-         "🔄 Chat mode changed to:",
-         mode
-      );
-
-      setChatMode(mode);
-
-      setErrorMessage("");
-
-   };
+      };
 
 
    // ==========================================
    // SEND MESSAGE
    // ==========================================
 
-   const handleSendMessage = async (message) => {
+   const handleSendMessage =
+      async (message) => {
 
-      const trimmedMessage =
-         message?.trim();
+         const trimmedMessage =
+            message?.trim();
 
-      if (
-         !trimmedMessage ||
-         isLoading ||
-         regeneratingMessageId
-      ) {
-
-         return;
-
-      }
-
-      setErrorMessage("");
-
-      setIsLoading(true);
-
-
-      // ========================================
-      // TEMPORARY UI USER MESSAGE
-      // ========================================
-
-      const temporaryUserMessage = {
-
-         id:
-            `temp-user-${Date.now()}`,
-
-         role:
-            "user",
-
-         message:
-            trimmedMessage,
-
-      };
-
-
-      setMessages(
-         (previousMessages) => [
-
-            ...previousMessages,
-
-            temporaryUserMessage,
-
-         ]
-      );
-
-
-      try {
-
-         // ========================================
-         // SEND MESSAGE
-         // ========================================
-
-         const response =
-            await sendMessage(
-               trimmedMessage,
-               currentChatId,
-               chatMode,
-               isTemporaryChat
-            );
-
-
-         const chatId =
-            response?.chat_id;
-
-
-         if (!chatId) {
-
-            throw new Error(
-               "Backend did not return a chat ID."
-            );
-
-         }
-
-
-         // ========================================
-         // SET CURRENT CHAT
-         // ========================================
-
-         if (!currentChatId) {
-
-            setCurrentChatId(
-               chatId
-            );
-
-         }
-
-
-         // ========================================
-         // UPDATE TEMPORARY STATUS
-         // ========================================
 
          if (
-            typeof response?.temporary ===
-            "boolean"
+            !trimmedMessage ||
+            isLoading ||
+            regeneratingMessageId
          ) {
 
-            setIsTemporaryChat(
-               response.temporary
-            );
+            return;
 
          }
 
 
-         // ========================================
-         // MEMORY IS ACTIVE
-         // ========================================
+         setErrorMessage(
+            ""
+         );
 
-         setMemoryStatus({
-
-            active:
-               true,
-
-            resetAt:
-               null,
-
-         });
+         setIsLoading(
+            true
+         );
 
 
-         // ========================================
-         // ASSISTANT RESPONSE
-         // ========================================
-
-         const assistantMessage = {
+         const temporaryUserMessage = {
 
             id:
-               response.message_id ||
-               `temp-assistant-${Date.now()}`,
+               `temp-user-${Date.now()}`,
 
             role:
-               "assistant",
+               "user",
 
             message:
-               response.answer ||
-               "I couldn't generate a response.",
-
-            sources:
-
-               Array.isArray(
-                  response.sources
-               )
-                  ? response.sources
-                  : [],
-
-            usedWebSearch:
-
-               Boolean(
-                  response.used_web_search
-               ),
-
-            interactionId:
-
-               response.interaction_id ||
-               null,
-
-            feedback:
-               response.feedback ||
-               null,
+               trimmedMessage,
 
          };
 
@@ -618,68 +626,154 @@ function Chat() {
 
                ...previousMessages,
 
-               assistantMessage,
+               temporaryUserMessage,
 
             ]
          );
 
 
-         // ========================================
-         // REFRESH NORMAL CHAT HISTORY
-         // ========================================
+         try {
 
-         /*
-            Temporary chats must not be added
-            to the persistent sidebar history.
-         */
+            const response =
+               await sendMessage(
+                  trimmedMessage,
+                  currentChatId,
+                  chatMode,
+                  isTemporaryChat
+               );
 
-         if (!isTemporaryChat) {
 
-            await refreshChatHistory();
+            const chatId =
+               response?.chat_id;
+
+
+            if (
+               !chatId
+            ) {
+
+               throw new Error(
+                  "Backend did not return a chat ID."
+               );
+
+            }
+
+
+            if (
+               !currentChatId
+            ) {
+
+               setCurrentChatId(
+                  chatId
+               );
+
+            }
+
+
+            if (
+               typeof response?.temporary ===
+               "boolean"
+            ) {
+
+               setIsTemporaryChat(
+                  response.temporary
+               );
+
+            }
+
+
+            setMemoryStatus({
+               active: true,
+               resetAt: null,
+            });
+
+
+            const assistantMessage = {
+
+               id:
+                  response.message_id ||
+                  `temp-assistant-${Date.now()}`,
+
+               role:
+                  "assistant",
+
+               message:
+                  response.answer ||
+                  "I couldn't generate a response.",
+
+               sources:
+                  Array.isArray(
+                     response.sources
+                  )
+                     ? response.sources
+                     : [],
+
+               usedWebSearch:
+                  Boolean(
+                     response.used_web_search
+                  ),
+
+               interactionId:
+                  response.interaction_id ||
+                  null,
+
+               feedback:
+                  response.feedback ||
+                  null,
+
+            };
+
+
+            setMessages(
+               (previousMessages) => [
+
+                  ...previousMessages,
+
+                  assistantMessage,
+
+               ]
+            );
+
+
+            if (
+               !isTemporaryChat
+            ) {
+
+               await refreshChatHistory();
+
+            }
+
+         } catch (error) {
+
+            console.error(
+               "Chat error:",
+               error
+            );
+
+
+            setMessages(
+               (previousMessages) =>
+                  previousMessages.filter(
+                     (item) =>
+                        item.id !==
+                        temporaryUserMessage.id
+                  )
+            );
+
+
+            setErrorMessage(
+               error.message ||
+               "Sorry, something went wrong. Please try again."
+            );
+
+         } finally {
+
+            setIsLoading(
+               false
+            );
 
          }
 
-
-      } catch (error) {
-
-         console.error(
-            "Chat error:",
-            error
-         );
-
-
-         // ========================================
-         // REMOVE TEMPORARY USER MESSAGE
-         // ========================================
-
-         setMessages(
-            (previousMessages) =>
-
-               previousMessages.filter(
-                  (item) =>
-                     item.id !==
-                     temporaryUserMessage.id
-               )
-
-         );
-
-
-         setErrorMessage(
-
-            error.message ||
-
-            "Sorry, something went wrong. Please try again."
-
-         );
-
-
-      } finally {
-
-         setIsLoading(false);
-
-      }
-
-   };
+      };
 
 
    // ==========================================
@@ -701,10 +795,6 @@ function Chat() {
          }
 
 
-         // ========================================
-         // FIND TARGET MESSAGE
-         // ========================================
-
          const targetIndex =
             messages.findIndex(
                (message) =>
@@ -713,7 +803,9 @@ function Chat() {
             );
 
 
-         if (targetIndex === -1) {
+         if (
+            targetIndex === -1
+         ) {
 
             setErrorMessage(
                "Unable to find the answer to regenerate."
@@ -730,7 +822,8 @@ function Chat() {
 
          if (
             !targetMessage ||
-            targetMessage.role !== "assistant"
+            targetMessage.role !==
+            "assistant"
          ) {
 
             setErrorMessage(
@@ -741,10 +834,6 @@ function Chat() {
 
          }
 
-
-         // ========================================
-         // ONLY LATEST MESSAGE
-         // ========================================
 
          if (
             targetIndex !==
@@ -760,17 +849,14 @@ function Chat() {
          }
 
 
-         // ========================================
-         // FIND USER QUESTION
-         // ========================================
-
          const userMessage =
             messages[targetIndex - 1];
 
 
          if (
             !userMessage ||
-            userMessage.role !== "user"
+            userMessage.role !==
+            "user"
          ) {
 
             setErrorMessage(
@@ -784,22 +870,14 @@ function Chat() {
 
          try {
 
-            setErrorMessage("");
+            setErrorMessage(
+               ""
+            );
 
             setRegeneratingMessageId(
                messageId
             );
 
-
-            console.log(
-               "🔄 Regenerating answer:",
-               messageId
-            );
-
-
-            // ======================================
-            // CALL BACKEND
-            // ======================================
 
             const response =
                await regenerateMessage(
@@ -821,13 +899,8 @@ function Chat() {
             }
 
 
-            // ======================================
-            // UPDATE MESSAGE
-            // ======================================
-
             setMessages(
                (previousMessages) =>
-
                   previousMessages.map(
                      (message) => {
 
@@ -849,7 +922,6 @@ function Chat() {
                               response.answer,
 
                            sources:
-
                               Array.isArray(
                                  response.sources
                               )
@@ -857,13 +929,11 @@ function Chat() {
                                  : [],
 
                            usedWebSearch:
-
                               Boolean(
                                  response.used_web_search
                               ),
 
                            interactionId:
-
                               response.interaction_id ||
                               null,
 
@@ -874,40 +944,22 @@ function Chat() {
 
                      }
                   )
-
             );
 
 
-            // ======================================
-            // MEMORY REMAINS ACTIVE
-            // ======================================
-
             setMemoryStatus({
-
-               active:
-                  true,
-
-               resetAt:
-                  null,
-
+               active: true,
+               resetAt: null,
             });
 
 
-            // ======================================
-            // REFRESH NORMAL HISTORY ONLY
-            // ======================================
-
-            if (!isTemporaryChat) {
+            if (
+               !isTemporaryChat
+            ) {
 
                await refreshChatHistory();
 
             }
-
-
-            console.log(
-               "✅ Answer regenerated successfully."
-            );
-
 
          } catch (error) {
 
@@ -918,13 +970,9 @@ function Chat() {
 
 
             setErrorMessage(
-
                error.message ||
-
                "Failed to regenerate the answer. Please try again."
-
             );
-
 
          } finally {
 
@@ -941,196 +989,172 @@ function Chat() {
    // NEW NORMAL CHAT
    // ==========================================
 
-   const handleNewChat = async () => {
+   const handleNewChat =
+      async () => {
 
-      if (
-         isLoading ||
-         regeneratingMessageId
-      ) {
+         if (
+            isLoading ||
+            regeneratingMessageId
+         ) {
 
-         return;
+            return;
 
-      }
-
-
-      console.log(
-         "➕ Starting a new chat..."
-      );
-
-      setErrorMessage("");
+         }
 
 
-      // ========================================
-      // IF TEMPORARY CHAT IS ACTIVE
-      // ========================================
-
-      if (isTemporaryChat) {
-
-         await exitTemporaryChat();
-
-         return;
-
-      }
+         setErrorMessage(
+            ""
+         );
 
 
-      // ========================================
-      // RESET NORMAL CHAT
-      // ========================================
+         if (
+            isTemporaryChat
+         ) {
 
-      resetCurrentChat();
+            await exitTemporaryChat();
 
-      // A new chat opens the chat view on mobile.
-      showMobileChat();
+            closeSidebar();
 
-   };
+            return;
+
+         }
+
+
+         resetCurrentChat();
+
+
+         // Always close the mobile drawer
+         // after creating a new chat.
+         closeSidebar();
+
+      };
 
 
    // ==========================================
    // START TEMPORARY CHAT
    // ==========================================
 
-   const handleNewTemporaryChat = async () => {
+   const handleNewTemporaryChat =
+      async () => {
 
-      if (
-         isLoading ||
-         regeneratingMessageId
-      ) {
+         if (
+            isLoading ||
+            regeneratingMessageId
+         ) {
 
-         return;
+            return;
 
-      }
-
-
-      setErrorMessage("");
+         }
 
 
-      // ========================================
-      // REMOVE PREVIOUS TEMP CHAT
-      // ========================================
-
-      if (isTemporaryChat) {
-
-         await exitTemporaryChat();
-
-      }
+         setErrorMessage(
+            ""
+         );
 
 
-      // ========================================
-      // RESET TEMPORARY CHAT UI
-      // ========================================
+         if (
+            isTemporaryChat
+         ) {
 
-      setMessages([]);
+            await exitTemporaryChat();
 
-      setCurrentChatId(null);
-
-      // Temporary chat also opens directly in the chat
-      // view on mobile.
-      showMobileChat();
-
-      setMemoryStatus({
-
-         active:
-            false,
-
-         resetAt:
-            null,
-
-      });
+         }
 
 
-      setIsTemporaryChat(
-         true
-      );
+         setMessages([]);
+
+         setCurrentChatId(
+            null
+         );
 
 
-      console.log(
-         "🕶️ Temporary Chat started."
-      );
+         setMemoryStatus({
+            active: false,
+            resetAt: null,
+         });
 
-   };
+
+         setIsTemporaryChat(
+            true
+         );
+
+
+         closeSidebar();
+
+      };
 
 
    // ==========================================
    // OPEN GLOBAL CLEAR MEMORY MODAL
    // ==========================================
 
-   const handleClearMemory = () => {
+   const handleClearMemory =
+      () => {
 
-      if (
-         isLoading ||
-         regeneratingMessageId
-      ) {
+         if (
+            isLoading ||
+            regeneratingMessageId
+         ) {
 
-         return;
+            return;
 
-      }
-
-
-      console.log(
-         "🧹 Global Clear Memory button clicked"
-      );
+         }
 
 
-      setErrorMessage("");
+         setErrorMessage(
+            ""
+         );
 
 
-      setModal({
+         setModal({
 
-         isOpen:
-            true,
+            isOpen: true,
 
-         type:
-            "clear",
+            type: "clear",
 
-         chatId:
-            null,
+            chatId: null,
 
-      });
+         });
 
-   };
+      };
 
 
    // ==========================================
    // OPEN CURRENT CHAT MEMORY MODAL
    // ==========================================
 
-   const handleClearChatMemory = (
-      chatId = currentChatId
-   ) => {
+   const handleClearChatMemory =
+      (
+         chatId = currentChatId
+      ) => {
 
-      if (
-         isLoading ||
-         regeneratingMessageId ||
-         !chatId
-      ) {
+         if (
+            isLoading ||
+            regeneratingMessageId ||
+            !chatId
+         ) {
 
-         return;
+            return;
 
-      }
-
-
-      console.log(
-         "🧹 Clear current chat memory:",
-         chatId
-      );
+         }
 
 
-      setErrorMessage("");
+         setErrorMessage(
+            ""
+         );
 
 
-      setModal({
+         setModal({
 
-         isOpen:
-            true,
+            isOpen: true,
 
-         type:
-            "clear-chat",
+            type: "clear-chat",
 
-         chatId,
+            chatId,
 
-      });
+         });
 
-   };
+      };
 
 
    // ==========================================
@@ -1152,19 +1176,17 @@ function Chat() {
 
          try {
 
-            setIsLoading(true);
+            setIsLoading(
+               true
+            );
 
-            setErrorMessage("");
+            setErrorMessage(
+               ""
+            );
 
 
             const result =
                await clearMemory();
-
-
-            console.log(
-               "✅ Global Clear Memory response:",
-               result
-            );
 
 
             const resetAt =
@@ -1174,8 +1196,7 @@ function Chat() {
 
             setMemoryStatus({
 
-               active:
-                  false,
+               active: false,
 
                resetAt,
 
@@ -1184,7 +1205,6 @@ function Chat() {
 
             setChatHistory(
                (previousChats) =>
-
                   previousChats.map(
                      (chat) => ({
 
@@ -1198,49 +1218,37 @@ function Chat() {
 
                      })
                   )
-
             );
 
 
             setModal({
 
-               isOpen:
-                  false,
+               isOpen: false,
 
-               type:
-                  "clear",
+               type: "clear",
 
-               chatId:
-                  null,
+               chatId: null,
 
             });
-
-
-            console.log(
-               "✅ Gemini memory cleared for all chats."
-            );
-
 
          } catch (error) {
 
             console.error(
-               "❌ Clear Memory error:",
+               "Clear Memory error:",
                error
             );
 
 
             setErrorMessage(
-
                error.message ||
-
                "Failed to clear conversation memory."
-
             );
-
 
          } finally {
 
-            setIsLoading(false);
+            setIsLoading(
+               false
+            );
 
          }
 
@@ -1258,18 +1266,17 @@ function Chat() {
             modal.chatId;
 
 
-         if (!chatId) {
+         if (
+            !chatId
+         ) {
 
             setModal({
 
-               isOpen:
-                  false,
+               isOpen: false,
 
-               type:
-                  "clear-chat",
+               type: "clear-chat",
 
-               chatId:
-                  null,
+               chatId: null,
 
             });
 
@@ -1290,9 +1297,13 @@ function Chat() {
 
          try {
 
-            setIsLoading(true);
+            setIsLoading(
+               true
+            );
 
-            setErrorMessage("");
+            setErrorMessage(
+               ""
+            );
 
 
             const result =
@@ -1313,8 +1324,7 @@ function Chat() {
 
                setMemoryStatus({
 
-                  active:
-                     false,
+                  active: false,
 
                   resetAt,
 
@@ -1325,7 +1335,6 @@ function Chat() {
 
             setChatHistory(
                (previousChats) =>
-
                   previousChats.map(
                      (chat) => {
 
@@ -1353,44 +1362,37 @@ function Chat() {
 
                      }
                   )
-
             );
 
 
             setModal({
 
-               isOpen:
-                  false,
+               isOpen: false,
 
-               type:
-                  "clear-chat",
+               type: "clear-chat",
 
-               chatId:
-                  null,
+               chatId: null,
 
             });
-
 
          } catch (error) {
 
             console.error(
-               "❌ Clear chat memory error:",
+               "Clear chat memory error:",
                error
             );
 
 
             setErrorMessage(
-
                error.message ||
-
                "Failed to clear memory for this chat."
-
             );
-
 
          } finally {
 
-            setIsLoading(false);
+            setIsLoading(
+               false
+            );
 
          }
 
@@ -1417,29 +1419,26 @@ function Chat() {
 
          try {
 
-            setIsLoading(true);
+            setIsLoading(
+               true
+            );
 
-            setErrorMessage("");
+            setErrorMessage(
+               ""
+            );
 
-
-            // ====================================
-            // REMOVE ACTIVE TEMPORARY CHAT
-            // ====================================
 
             if (
                isTemporaryChat &&
                currentChatId &&
-               currentChatId !== chat.id
+               currentChatId !==
+               chat.id
             ) {
 
                await exitTemporaryChat();
 
             }
 
-
-            // ====================================
-            // LOAD SELECTED CHAT
-            // ====================================
 
             const selectedChat =
                await getChat(
@@ -1448,11 +1447,9 @@ function Chat() {
 
 
             const loadedMessages =
-
                Array.isArray(
                   selectedChat?.messages
                )
-
                   ? selectedChat.messages.map(
                      (message) => ({
 
@@ -1466,7 +1463,6 @@ function Chat() {
                            message.message,
 
                         sources:
-
                            Array.isArray(
                               message.sources
                            )
@@ -1474,13 +1470,11 @@ function Chat() {
                               : [],
 
                         usedWebSearch:
-
                            Boolean(
                               message.used_web_search
                            ),
 
                         interactionId:
-
                            message.interaction_id ||
                            null,
 
@@ -1490,7 +1484,6 @@ function Chat() {
 
                      })
                   )
-
                   : [];
 
 
@@ -1504,16 +1497,6 @@ function Chat() {
             );
 
 
-            // On mobile, move from the conversation
-            // list to the selected chat after it has
-            // been loaded successfully.
-            showMobileChat();
-
-
-            // ====================================
-            // TEMPORARY STATUS
-            // ====================================
-
             setIsTemporaryChat(
                Boolean(
                   selectedChat?.temporary
@@ -1521,20 +1504,14 @@ function Chat() {
             );
 
 
-            // ====================================
-            // MEMORY STATUS
-            // ====================================
-
             setMemoryStatus({
 
                active:
-
                   Boolean(
                      selectedChat?.memory?.active
                   ),
 
                resetAt:
-
                   selectedChat?.memory?.reset_at ||
                   null,
 
@@ -1546,17 +1523,9 @@ function Chat() {
             );
 
 
-            console.log(
-               "🧠 Chat memory status:",
-               selectedChat?.memory
-            );
-
-
-            console.log(
-               "📝 Temporary chat:",
-               selectedChat?.temporary
-            );
-
+            // Close the mobile drawer
+            // after selecting a conversation.
+            closeSidebar();
 
          } catch (error) {
 
@@ -1567,17 +1536,15 @@ function Chat() {
 
 
             setErrorMessage(
-
                error.message ||
-
                "Failed to load the selected chat."
-
             );
-
 
          } finally {
 
-            setIsLoading(false);
+            setIsLoading(
+               false
+            );
 
          }
 
@@ -1585,7 +1552,7 @@ function Chat() {
 
 
    // ==========================================
-   // OPEN DELETE CHAT MODAL
+   // DELETE CHAT
    // ==========================================
 
    const handleDeleteChat =
@@ -1604,11 +1571,9 @@ function Chat() {
 
          setModal({
 
-            isOpen:
-               true,
+            isOpen: true,
 
-            type:
-               "delete",
+            type: "delete",
 
             chatId,
 
@@ -1628,18 +1593,17 @@ function Chat() {
             modal.chatId;
 
 
-         if (!chatId) {
+         if (
+            !chatId
+         ) {
 
             setModal({
 
-               isOpen:
-                  false,
+               isOpen: false,
 
-               type:
-                  "delete",
+               type: "delete",
 
-               chatId:
-                  null,
+               chatId: null,
 
             });
 
@@ -1660,9 +1624,13 @@ function Chat() {
 
          try {
 
-            setIsLoading(true);
+            setIsLoading(
+               true
+            );
 
-            setErrorMessage("");
+            setErrorMessage(
+               ""
+            );
 
 
             await deleteChat(
@@ -1685,22 +1653,13 @@ function Chat() {
 
             setModal({
 
-               isOpen:
-                  false,
+               isOpen: false,
 
-               type:
-                  "delete",
+               type: "delete",
 
-               chatId:
-                  null,
+               chatId: null,
 
             });
-
-
-            console.log(
-               "✅ Chat deleted successfully."
-            );
-
 
          } catch (error) {
 
@@ -1711,17 +1670,15 @@ function Chat() {
 
 
             setErrorMessage(
-
                error.message ||
-
                "Failed to delete the chat."
-
             );
-
 
          } finally {
 
-            setIsLoading(false);
+            setIsLoading(
+               false
+            );
 
          }
 
@@ -1756,7 +1713,9 @@ function Chat() {
 
          try {
 
-            setErrorMessage("");
+            setErrorMessage(
+               ""
+            );
 
 
             await renameChat(
@@ -1767,7 +1726,6 @@ function Chat() {
 
             setChatHistory(
                (previousChats) =>
-
                   previousChats.map(
                      (chat) => {
 
@@ -1792,9 +1750,7 @@ function Chat() {
 
                      }
                   )
-
             );
-
 
          } catch (error) {
 
@@ -1805,11 +1761,8 @@ function Chat() {
 
 
             setErrorMessage(
-
                error.message ||
-
                "Failed to rename the chat."
-
             );
 
 
@@ -1824,142 +1777,132 @@ function Chat() {
    // EXPORT CURRENT CHAT
    // ==========================================
 
-   const handleExportChat = (format) => {
+   const handleExportChat =
+      (format) => {
 
-      if (
-         !currentChatId ||
-         !Array.isArray(messages) ||
-         messages.length === 0
-      ) {
+         if (
+            !currentChatId ||
+            !Array.isArray(
+               messages
+            ) ||
+            messages.length === 0
+         ) {
 
-         setErrorMessage(
-            "There is no conversation to export."
-         );
+            setErrorMessage(
+               "There is no conversation to export."
+            );
 
-         return;
-
-      }
-
-
-      // ========================================
-      // FIND CURRENT CHAT TITLE
-      // ========================================
-
-      const currentChat =
-         chatHistory.find(
-            (chat) =>
-               chat?.id === currentChatId
-         );
-
-
-      const title =
-         currentChat?.title ||
-         "EchoMind";
-
-
-      try {
-
-         setErrorMessage("");
-
-
-         // ======================================
-         // EXPORT FORMAT
-         // ======================================
-
-         switch (format) {
-
-            case "pdf":
-
-               exportChatAsPdf(
-                  title,
-                  messages
-               );
-
-               break;
-
-
-            case "txt":
-
-               exportChatAsTxt(
-                  title,
-                  messages
-               );
-
-               break;
-
-
-            case "markdown":
-
-               exportChatAsMarkdown(
-                  title,
-                  messages
-               );
-
-               break;
-
-
-            default:
-
-               throw new Error(
-                  "Unsupported export format."
-               );
+            return;
 
          }
 
 
-         console.log(
-            `✅ Chat exported as ${format}.`
-         );
+         const currentChat =
+            chatHistory.find(
+               (chat) =>
+                  chat?.id ===
+                  currentChatId
+            );
 
 
-      } catch (error) {
-
-         console.error(
-            "❌ Chat export failed:",
-            error
-         );
+         const title =
+            currentChat?.title ||
+            "EchoMind";
 
 
-         setErrorMessage(
-            error.message ||
-            "Failed to export the conversation."
-         );
+         try {
 
-      }
+            setErrorMessage(
+               ""
+            );
 
-   };
+
+            switch (format) {
+
+               case "pdf":
+
+                  exportChatAsPdf(
+                     title,
+                     messages
+                  );
+
+                  break;
+
+
+               case "txt":
+
+                  exportChatAsTxt(
+                     title,
+                     messages
+                  );
+
+                  break;
+
+
+               case "markdown":
+
+                  exportChatAsMarkdown(
+                     title,
+                     messages
+                  );
+
+                  break;
+
+
+               default:
+
+                  throw new Error(
+                     "Unsupported export format."
+                  );
+
+            }
+
+         } catch (error) {
+
+            console.error(
+               "Chat export failed:",
+               error
+            );
+
+
+            setErrorMessage(
+               error.message ||
+               "Failed to export the conversation."
+            );
+
+         }
+
+      };
 
 
    // ==========================================
-   // OPEN LOGOUT MODAL
+   // LOGOUT
    // ==========================================
 
-   const handleLogout = () => {
+   const handleLogout =
+      () => {
 
-      if (
-         isLoading ||
-         regeneratingMessageId
-      ) {
+         if (
+            isLoading ||
+            regeneratingMessageId
+         ) {
 
-         return;
+            return;
 
-      }
+         }
 
 
-      setModal({
+         setModal({
 
-         isOpen:
-            true,
+            isOpen: true,
 
-         type:
-            "logout",
+            type: "logout",
 
-         chatId:
-            null,
+            chatId: null,
 
-      });
+         });
 
-   };
+      };
 
 
    // ==========================================
@@ -1968,11 +1911,6 @@ function Chat() {
 
    const handleConfirmLogout =
       async () => {
-
-         /*
-            Remove temporary conversation
-            before logging out.
-         */
 
          if (
             isTemporaryChat &&
@@ -1997,26 +1935,13 @@ function Chat() {
          }
 
 
-         console.log(
-            "↪ Logging out..."
-         );
-
-
-         // =====================================
-         // CLEAR AUTHENTICATION
-         // =====================================
-
          logout();
 
-
-         // =====================================
-         // NAVIGATE USING REACT ROUTER
-         // =====================================
 
          navigate(
             "/login",
             {
-               replace: true
+               replace: true,
             }
          );
 
@@ -2027,160 +1952,178 @@ function Chat() {
    // CANCEL MODAL
    // ==========================================
 
-   const handleCancelModal = () => {
+   const handleCancelModal =
+      () => {
 
-      if (isLoading) {
+         if (
+            isLoading
+         ) {
 
-         return;
+            return;
 
-      }
-
-
-      setModal({
-
-         isOpen:
-            false,
-
-         type:
-            "delete",
-
-         chatId:
-            null,
-
-      });
-
-   };
+         }
 
 
-   // ==========================================
-   // CLOSE ERROR MESSAGE
-   // ==========================================
+         setModal({
 
-   const handleCloseError = () => {
+            isOpen: false,
 
-      setErrorMessage("");
+            type: "delete",
 
-   };
+            chatId: null,
+
+         });
+
+      };
 
 
    // ==========================================
-   // SELECT MODAL ACTION
+   // CLOSE ERROR
    // ==========================================
 
-   const getModalConfirmHandler = () => {
+   const handleCloseError =
+      () => {
 
-      switch (modal.type) {
+         setErrorMessage(
+            ""
+         );
 
-         case "delete":
-            return handleConfirmDelete;
+      };
 
-         case "clear":
-            return handleConfirmClearMemory;
 
-         case "clear-chat":
-            return handleConfirmClearChatMemory;
+   // ==========================================
+   // MODAL CONFIRM HANDLER
+   // ==========================================
 
-         case "logout":
-            return handleConfirmLogout;
+   const getModalConfirmHandler =
+      () => {
 
-         default:
-            return handleCancelModal;
+         switch (
+         modal.type
+         ) {
 
-      }
+            case "delete":
 
-   };
+               return handleConfirmDelete;
+
+
+            case "clear":
+
+               return handleConfirmClearMemory;
+
+
+            case "clear-chat":
+
+               return handleConfirmClearChatMemory;
+
+
+            case "logout":
+
+               return handleConfirmLogout;
+
+
+            default:
+
+               return handleCancelModal;
+
+         }
+
+      };
 
 
    // ==========================================
    // MODAL CONTENT
    // ==========================================
 
-   const getModalContent = () => {
+   const getModalContent =
+      () => {
 
-      switch (modal.type) {
+         switch (
+         modal.type
+         ) {
 
-         case "delete":
+            case "delete":
 
-            return {
+               return {
 
-               title:
-                  "Delete this chat?",
+                  title:
+                     "Delete this chat?",
 
-               message:
-                  "This conversation and all of its messages will be permanently deleted. This action cannot be undone.",
+                  message:
+                     "This conversation and all of its messages will be permanently deleted. This action cannot be undone.",
 
-               confirmText:
-                  "Delete Chat",
+                  confirmText:
+                     "Delete Chat",
 
-            };
-
-
-         case "clear":
-
-            return {
-
-               title:
-                  "Clear all conversation memory?",
-
-               message:
-                  "This will reset the AI memory for all your chats. Your saved conversations and messages will not be deleted.",
-
-               confirmText:
-                  "Clear All Memory",
-
-            };
+               };
 
 
-         case "clear-chat":
+            case "clear":
 
-            return {
+               return {
 
-               title:
-                  "Clear this chat's memory?",
+                  title:
+                     "Clear all conversation memory?",
 
-               message:
-                  "This will reset the AI memory for this chat only. Your existing messages will remain visible and will not be deleted.",
+                  message:
+                     "This will reset the AI memory for all your chats. Your saved conversations and messages will not be deleted.",
 
-               confirmText:
-                  "Clear Chat Memory",
+                  confirmText:
+                     "Clear All Memory",
 
-            };
-
-
-         case "logout":
-
-            return {
-
-               title:
-                  "Logout?",
-
-               message:
-                  "Are you sure you want to log out of your EchoMind account?",
-
-               confirmText:
-                  "Logout",
-
-            };
+               };
 
 
-         default:
+            case "clear-chat":
 
-            return {
+               return {
 
-               title:
-                  "Confirm action",
+                  title:
+                     "Clear this chat's memory?",
 
-               message:
-                  "Are you sure you want to continue?",
+                  message:
+                     "This will reset the AI memory for this chat only. Your existing messages will remain visible and will not be deleted.",
 
-               confirmText:
-                  "Confirm",
+                  confirmText:
+                     "Clear Chat Memory",
 
-            };
+               };
 
-      }
 
-   };
+            case "logout":
+
+               return {
+
+                  title:
+                     "Logout?",
+
+                  message:
+                     "Are you sure you want to log out of your EchoMind account?",
+
+                  confirmText:
+                     "Logout",
+
+               };
+
+
+            default:
+
+               return {
+
+                  title:
+                     "Confirm action",
+
+                  message:
+                     "Are you sure you want to continue?",
+
+                  confirmText:
+                     "Confirm",
+
+               };
+
+         }
+
+      };
 
 
    const modalContent =
@@ -2194,15 +2137,18 @@ function Chat() {
    return (
 
       <div
-         className={`app-layout mobile-view-${mobileView}`}
-         onTouchStart={
-            handleTouchStart
+         className={
+            `app-layout ${isSidebarOpen
+               ? "sidebar-is-open"
+               : "sidebar-is-closed"
+            }`
          }
-         onTouchEnd={
-            handleTouchEnd
+         data-mobile-sidebar-open={
+            isSidebarOpen
+               ? "true"
+               : "false"
          }
       >
-
 
          {/* =====================================
              SIDEBAR
@@ -2210,20 +2156,21 @@ function Chat() {
 
          <Sidebar
 
+            isMobileOpen={
+               isSidebarOpen
+            }
+
+            onMobileToggle={
+               toggleSidebar
+            }
+
+            onMobileClose={
+               closeSidebar
+            }
+
             onNewChat={
                handleNewChat
             }
-
-            /*
-               IMPORTANT:
-
-               Sidebar expects
-               `onStartTemporaryChat`.
-
-               Do NOT use
-               `onNewTemporaryChat`
-               here.
-            */
 
             onStartTemporaryChat={
                handleNewTemporaryChat
@@ -2284,8 +2231,14 @@ function Chat() {
              MAIN CHAT AREA
          ===================================== */}
 
-         <main className="main-content">
-
+         <main
+            className={
+               `main-content ${isSidebarOpen
+                  ? "mobile-sidebar-open"
+                  : ""
+               }`
+            }
+         >
 
             {/* =====================================
                 ERROR MESSAGE
@@ -2406,7 +2359,17 @@ function Chat() {
                   handleExportChat
                }
 
+               /*
+                  On mobile the existing
+                  "Chats" button in ChatWindow
+                  opens the sidebar.
+               */
+               onBackToChats={
+                  openSidebar
+               }
+
             />
+
 
          </main>
 
@@ -2436,9 +2399,7 @@ function Chat() {
             isLoading={
 
                modal.type === "delete" ||
-
                   modal.type === "clear" ||
-
                   modal.type === "clear-chat"
 
                   ? isLoading

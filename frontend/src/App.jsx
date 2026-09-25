@@ -19,16 +19,15 @@ import { isAuthenticated } from "./services/auth";
 // ==========================================
 
 function ProtectedRoute({ children }) {
+  const authenticated = isAuthenticated();
 
-  if (!isAuthenticated()) {
-
+  if (!authenticated) {
     return (
       <Navigate
         to="/login"
         replace
       />
     );
-
   }
 
   return children;
@@ -40,16 +39,15 @@ function ProtectedRoute({ children }) {
 // ==========================================
 
 function PublicRoute({ children }) {
+  const authenticated = isAuthenticated();
 
-  if (isAuthenticated()) {
-
+  if (authenticated) {
     return (
       <Navigate
         to="/chat"
         replace
       />
     );
-
   }
 
   return children;
@@ -61,18 +59,15 @@ function PublicRoute({ children }) {
 // ==========================================
 
 function App() {
-
-  const authenticated =
-    isAuthenticated();
+  const authenticated = isAuthenticated();
 
   return (
     <BrowserRouter>
-
       <Routes>
 
-        {/* ==============================
-                    LOGIN
-                ============================== */}
+        {/* ==================================
+            AUTHENTICATION
+        ================================== */}
 
         <Route
           path="/login"
@@ -83,11 +78,6 @@ function App() {
           }
         />
 
-
-        {/* ==============================
-                    REGISTER
-                ============================== */}
-
         <Route
           path="/register"
           element={
@@ -97,11 +87,6 @@ function App() {
           }
         />
 
-
-        {/* ==============================
-                    FORGOT PASSWORD
-                ============================== */}
-
         <Route
           path="/forgot-password"
           element={
@@ -110,11 +95,6 @@ function App() {
             </PublicRoute>
           }
         />
-
-
-        {/* ==============================
-                    RESET PASSWORD
-                ============================== */}
 
         <Route
           path="/reset-password"
@@ -126,9 +106,9 @@ function App() {
         />
 
 
-        {/* ==============================
-                    CHAT
-                ============================== */}
+        {/* ==================================
+            PROTECTED CHAT
+        ================================== */}
 
         <Route
           path="/chat"
@@ -140,41 +120,36 @@ function App() {
         />
 
 
-        {/* ==============================
-                    DEFAULT
-                ============================== */}
+        {/* ==================================
+            ROOT
+        ================================== */}
 
         <Route
           path="/"
           element={
             <Navigate
-              to={
-                authenticated
-                  ? "/chat"
-                  : "/login"
-              }
+              to={authenticated ? "/chat" : "/login"}
               replace
             />
           }
         />
 
 
-        {/* ==============================
-                    UNKNOWN ROUTE
-                ============================== */}
+        {/* ==================================
+            UNKNOWN ROUTES
+        ================================== */}
 
         <Route
           path="*"
           element={
             <Navigate
-              to="/"
+              to={authenticated ? "/chat" : "/login"}
               replace
             />
           }
         />
 
       </Routes>
-
     </BrowserRouter>
   );
 }

@@ -1,302 +1,328 @@
-/* =========================================
-   APP LAYOUT
-========================================= */
+/* =========================================================
+   CHAT PAGE
+   EchoMind — Main Chat Layout
+   ========================================================= */
+
+
+/* =========================================================
+   1. ROOT / PAGE VARIABLES
+   ========================================================= */
+
+:root {
+   --chat-bg: #07111f;
+   --chat-bg-soft: #0a1626;
+
+   --chat-surface: #0d1b2a;
+   --chat-surface-hover: #122238;
+
+   --chat-border: rgba(255, 255, 255, 0.08);
+   --chat-border-strong: rgba(255, 255, 255, 0.12);
+
+   --chat-text: #f4f7fb;
+   --chat-text-soft: #aab7c7;
+   --chat-text-muted: #6f7f91;
+
+   --chat-accent: #7c5cff;
+   --chat-accent-light: #9b83ff;
+   --chat-accent-soft: rgba(124, 92, 255, 0.14);
+
+   --chat-danger: #ff6678;
+   --chat-danger-soft: rgba(255, 102, 120, 0.12);
+
+   --chat-warning: #f4b95f;
+   --chat-warning-soft: rgba(244, 185, 95, 0.12);
+
+   --chat-success: #55d68a;
+   --chat-success-soft: rgba(85, 214, 138, 0.12);
+
+   --chat-radius-sm: 8px;
+   --chat-radius-md: 12px;
+   --chat-radius-lg: 16px;
+
+   --chat-sidebar-width: 280px;
+
+   --chat-transition:
+      180ms ease;
+
+   --chat-shadow:
+      0 12px 40px rgba(0, 0, 0, 0.28);
+}
+
+
+/* =========================================================
+   2. GLOBAL CHAT PAGE
+   ========================================================= */
 
 .app-layout {
+   position: relative;
+
+   display: flex;
+
    width: 100%;
-   min-width: 0;
    height: 100vh;
-   height: 100svh;
    height: 100dvh;
-   min-height: 0;
-
-   display: flex;
-   position: relative;
-
-   overflow: hidden;
-
-   box-sizing: border-box;
-
-   background: #0b0e13;
-   color: #f0f1f4;
-
-   isolation: isolate;
-}
-
-.app-layout *,
-.app-layout *::before,
-.app-layout *::after {
-   box-sizing: border-box;
-}
-
-
-/* =========================================
-   MAIN CONTENT
-========================================= */
-
-.main-content {
-   flex: 1 1 auto;
-
-   width: auto;
-   min-width: 0;
-   min-height: 0;
-
-   height: 100vh;
-   height: 100svh;
-   height: 100dvh;
-
-   display: flex;
-   flex-direction: column;
-
-   position: relative;
 
    overflow: hidden;
 
    background:
-      radial-gradient(circle at 50% -10%,
-         rgba(255, 255, 255, 0.035),
-         transparent 34%),
-      #0b0e13;
+      radial-gradient(circle at 80% 10%,
+         rgba(124, 92, 255, 0.07),
+         transparent 30%),
+      var(--chat-bg);
 
-   overscroll-behavior: none;
+   color: var(--chat-text);
+
+   isolation: isolate;
 }
 
 
-/* =========================================
-   DIRECT CHILDREN
-========================================= */
+/* =========================================================
+   3. MAIN CONTENT
+   ========================================================= */
 
-.main-content>* {
-   min-width: 0;
-   max-width: 100%;
-}
-
-
-/* =========================================
-   CHAT ERROR MESSAGE
-========================================= */
-
-.chat-error-message {
-   width: calc(100% - 32px);
-   max-width: 900px;
+.main-content {
+   position: relative;
 
    display: flex;
+   flex: 1;
+
+   min-width: 0;
+   min-height: 0;
+
+   height: 100%;
+
+   flex-direction: column;
+
+   overflow: hidden;
+
+   background:
+      linear-gradient(180deg,
+         rgba(255, 255, 255, 0.012),
+         transparent 30%);
+
+   transition:
+      margin var(--chat-transition),
+      width var(--chat-transition);
+}
+
+
+/* =========================================================
+   4. SIDEBAR STATE
+   ========================================================= */
+
+/*
+   Desktop:
+   Sidebar is expected to control its own width.
+
+   These classes mainly exist for mobile behavior.
+*/
+
+.sidebar-is-open,
+.sidebar-is-closed {
+   width: 100%;
+}
+
+
+/* =========================================================
+   5. ERROR MESSAGE
+   ========================================================= */
+
+.chat-error-message {
+   position: relative;
+
+   z-index: 30;
+
+   display: flex;
+
    align-items: center;
    justify-content: space-between;
 
-   gap: 12px;
+   gap: 16px;
 
-   margin: 12px auto 0;
+   width: min(calc(100% - 32px),
+         900px);
 
-   padding: 10px 12px;
+   margin: 14px auto 0;
 
-   box-sizing: border-box;
+   padding: 12px 14px;
 
-   border: 1px solid rgba(255, 255, 255, 0.08);
-   border-radius: 10px;
+   border:
+      1px solid rgba(255, 102, 120, 0.24);
 
-   color: #d9dde4;
+   border-radius:
+      var(--chat-radius-md);
 
-   background: rgba(255, 255, 255, 0.045);
+   background:
+      linear-gradient(135deg,
+         rgba(255, 102, 120, 0.11),
+         rgba(255, 102, 120, 0.055));
 
    box-shadow:
-      0 8px 24px rgba(0, 0, 0, 0.14);
+      0 8px 24px rgba(0, 0, 0, 0.18);
 
-   font-size: 12px;
-   line-height: 1.4;
+   color: var(--chat-text);
 
-   z-index: 5;
+   backdrop-filter:
+      blur(12px);
 
-   overflow: hidden;
+   -webkit-backdrop-filter:
+      blur(12px);
 
-   animation: errorSlideIn 0.2s ease;
+   animation:
+      chatErrorEnter 180ms ease both;
 }
 
 
-/* =========================================
-   ERROR CONTENT
-========================================= */
-
 .chat-error-content {
-   flex: 1 1 auto;
+   display: flex;
+
+   align-items: center;
 
    min-width: 0;
 
-   display: flex;
-   align-items: center;
-
-   gap: 9px;
-
-   overflow: hidden;
+   gap: 10px;
 }
 
 
 .chat-error-icon {
-   width: 18px;
-   height: 18px;
+   flex: 0 0 auto;
 
-   flex: 0 0 18px;
+   display: inline-flex;
 
-   display: flex;
    align-items: center;
    justify-content: center;
 
-   font-size: 14px;
-   line-height: 1;
+   width: 28px;
+   height: 28px;
 
-   overflow: hidden;
+   border-radius: 50%;
+
+   background:
+      rgba(255, 102, 120, 0.13);
+
+   font-size: 14px;
 }
 
 
 .chat-error-text {
    min-width: 0;
 
-   flex: 1 1 auto;
+   color: #ffb4be;
 
-   color: #d9dde4;
-
+   font-size: 13px;
    line-height: 1.45;
 
    overflow-wrap: anywhere;
-   word-break: break-word;
 }
 
 
-/* =========================================
-   ERROR CLOSE BUTTON
-========================================= */
-
 .chat-error-close {
-   width: 32px;
-   height: 32px;
+   flex: 0 0 auto;
 
-   flex: 0 0 32px;
+   display: inline-flex;
 
-   display: flex;
    align-items: center;
    justify-content: center;
 
+   width: 30px;
+   height: 30px;
+
    padding: 0;
 
-   border: 1px solid transparent;
-   border-radius: 7px;
+   border: 0;
 
-   color: #858d9a;
+   border-radius: 8px;
+
    background: transparent;
 
-   font-family: inherit;
-   font-size: 18px;
+   color: #ff9aa8;
+
+   font-size: 22px;
    line-height: 1;
 
    cursor: pointer;
 
    transition:
-      color 0.18s ease,
-      background 0.18s ease,
-      border-color 0.18s ease,
-      transform 0.15s ease;
-
-   -webkit-tap-highlight-color: transparent;
-
-   touch-action: manipulation;
+      background var(--chat-transition),
+      color var(--chat-transition),
+      transform var(--chat-transition);
 }
 
 
-.chat-error-close:hover:not(:disabled) {
-   color: #f1f2f4;
+.chat-error-close:hover {
+   background:
+      rgba(255, 102, 120, 0.12);
 
-   background: rgba(255, 255, 255, 0.08);
+   color: #ffffff;
 
-   border-color: rgba(255, 255, 255, 0.08);
+   transform: scale(1.04);
 }
 
 
-.chat-error-close:active:not(:disabled) {
-   transform: scale(0.92);
-}
-
-
-.chat-error-close:focus {
-   outline: none;
+.chat-error-close:active {
+   transform: scale(0.96);
 }
 
 
 .chat-error-close:focus-visible {
-   outline: 2px solid rgba(255, 255, 255, 0.35);
+   outline:
+      2px solid rgba(255, 102, 120, 0.55);
+
    outline-offset: 2px;
 }
 
 
-.chat-error-close:disabled {
-   cursor: not-allowed;
-   opacity: 0.5;
-}
-
-
-/* =========================================
-   ERROR ANIMATION
-========================================= */
-
-@keyframes errorSlideIn {
-   from {
-      opacity: 0;
-      transform: translateY(-6px);
-   }
-
-   to {
-      opacity: 1;
-      transform: translateY(0);
-   }
-}
-
-
-/* =========================================
-   TEMPORARY CHAT INDICATOR
-========================================= */
+/* =========================================================
+   6. TEMPORARY CHAT INDICATOR
+   ========================================================= */
 
 .temporary-chat-indicator {
-   width: 100%;
+   position: relative;
 
-   flex: 0 0 auto;
+   z-index: 20;
 
    display: flex;
+
    align-items: center;
    justify-content: center;
 
-   gap: 8px;
-
-   padding:
-      10px max(16px, env(safe-area-inset-right)) 10px max(16px, env(safe-area-inset-left));
-
-   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-
-   background: rgba(11, 14, 19, 0.96);
-
-   color: #858d9a;
-
-   font-size: 13px;
-   line-height: 1.4;
-
-   text-align: center;
-
-   position: relative;
-   z-index: 4;
-
    flex-wrap: wrap;
 
-   overflow: hidden;
+   gap: 8px;
 
-   backdrop-filter: blur(8px);
-   -webkit-backdrop-filter: blur(8px);
+   width: min(calc(100% - 32px),
+         900px);
+
+   margin: 12px auto 0;
+
+   padding: 9px 14px;
+
+   border:
+      1px solid rgba(244, 185, 95, 0.22);
+
+   border-radius:
+      999px;
+
+   background:
+      rgba(244, 185, 95, 0.075);
+
+   color: var(--chat-text-soft);
+
+   font-size: 12px;
+   line-height: 1.4;
+
+   backdrop-filter:
+      blur(10px);
+
+   -webkit-backdrop-filter:
+      blur(10px);
 }
 
 
 .temporary-chat-indicator strong {
-   color: #f0f1f4;
+   color: #f4c878;
 
    font-weight: 600;
-
-   white-space: nowrap;
 }
 
 
@@ -306,634 +332,261 @@
    align-items: center;
    justify-content: center;
 
-   flex: 0 0 auto;
-
-   font-size: 14px;
-   line-height: 1;
-}
-
-
-.temporary-chat-indicator>span:last-child {
-   min-width: 0;
-
-   max-width: 100%;
-
-   color: #858d9a;
-
-   overflow-wrap: anywhere;
-   word-break: break-word;
-}
-
-
-/* =========================================
-   CHAT WINDOW AREA
-========================================= */
-
-.main-content>.chat-window,
-.main-content>[class*="chat-window"] {
-   flex: 1 1 auto;
-
-   width: 100%;
-
-   min-width: 0;
-   min-height: 0;
-
-   position: relative;
-
-   overflow: hidden;
-}
-
-
-/* =========================================
-   LOADING / DISABLED STATE SUPPORT
-========================================= */
-
-button:disabled {
-   cursor: not-allowed;
-}
-
-
-/* =========================================
-   MEMORY STATE SUPPORT
-========================================= */
-
-.memory-active {
-   color: #dfe3e8;
-}
-
-
-.memory-inactive {
-   color: #858d9a;
-}
-
-
-.memory-status {
-   display: inline-flex;
-
-   align-items: center;
-
-   gap: 6px;
-
-   min-width: 0;
-
-   max-width: 100%;
-
-   font-size: 11px;
-   line-height: 1.3;
-
-   color: #858d9a;
-
-   overflow-wrap: anywhere;
-}
-
-
-.memory-status-dot {
-   width: 6px;
-   height: 6px;
-
-   flex: 0 0 6px;
+   width: 22px;
+   height: 22px;
 
    border-radius: 50%;
 
-   background: currentColor;
+   background:
+      rgba(244, 185, 95, 0.1);
 }
 
 
-/* =========================================
-   CHAT CONTENT SAFETY
-========================================= */
+/* =========================================================
+   7. CHAT WINDOW CONTAINER SUPPORT
+   ========================================================= */
 
 /*
-   Apply wrapping only to textual elements.
-   Avoid forcing max-width/word-break onto every
-   span because spans are frequently used by icons,
-   buttons, badges, SVG wrappers, etc.
+   ChatWindow owns the actual conversation UI.
+   These rules make sure it can correctly occupy
+   the available height inside Chat.jsx.
 */
 
-.main-content p,
-.main-content h1,
-.main-content h2,
-.main-content h3,
-.main-content h4,
-.main-content h5,
-.main-content h6,
-.main-content li,
-.main-content blockquote,
-.main-content td,
-.main-content th {
+.main-content>*:last-child {
+   min-height: 0;
+}
+
+
+/*
+   If ChatWindow has a root wrapper,
+   these common names will inherit correctly.
+*/
+
+.chat-window,
+.chat-container,
+.chat-page {
    min-width: 0;
-
-   max-width: 100%;
-
-   overflow-wrap: anywhere;
-   word-break: break-word;
+   min-height: 0;
 }
 
 
-/* =========================================
-   LINKS / TEXT SAFETY
-========================================= */
+/* =========================================================
+   8. MOBILE SIDEBAR OPEN STATE
+   ========================================================= */
 
-.main-content a {
-   max-width: 100%;
-
-   overflow-wrap: anywhere;
-   word-break: break-word;
+.mobile-sidebar-open {
+   position: relative;
 }
 
 
-/* =========================================
-   CODE BLOCK SAFETY
-========================================= */
+/*
+   Prevent the chat content from visually
+   shifting when the drawer opens.
+*/
 
-.main-content pre {
-   max-width: 100%;
-
-   overflow-x: auto;
-   overflow-y: hidden;
-
-   -webkit-overflow-scrolling: touch;
-
-   overscroll-behavior-x: contain;
+.app-layout.sidebar-is-open .main-content {
+   min-width: 0;
 }
 
 
-.main-content pre code {
-   max-width: none;
+/* =========================================================
+   9. MOBILE OVERLAY
+   ========================================================= */
 
-   overflow-wrap: normal;
-   word-break: normal;
+/*
+   This pseudo-element creates a dark overlay
+   when the mobile sidebar is open.
+
+   Sidebar should have a higher z-index than this.
+*/
+
+@media (max-width: 768px) {
+
+   .app-layout[data-mobile-sidebar-open="true"] .main-content::before {
+
+      content: "";
+
+      position: fixed;
+
+      inset: 0;
+
+      z-index: 40;
+
+      background:
+         rgba(2, 8, 16, 0.58);
+
+      backdrop-filter:
+         blur(2px);
+
+      -webkit-backdrop-filter:
+         blur(2px);
+
+      pointer-events: none;
+
+      animation:
+         sidebarOverlayIn 180ms ease both;
+   }
+
 }
 
 
-/* =========================================
-   IMAGES / MEDIA SAFETY
-========================================= */
+/* =========================================================
+   10. MOBILE LAYOUT
+   ========================================================= */
 
-.main-content img,
-.main-content video,
-.main-content canvas,
-.main-content iframe {
-   max-width: 100%;
-}
+@media (max-width: 768px) {
 
+   .app-layout {
+      display: block;
 
-.main-content img,
-.main-content video {
-   height: auto;
-}
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
 
-
-/* =========================================
-   TABLE SAFETY
-========================================= */
-
-.main-content table {
-   max-width: 100%;
-
-   border-collapse: collapse;
-}
+      overflow: hidden;
+   }
 
 
-.main-content .table-wrapper,
-.main-content [class*="table-wrapper"] {
-   max-width: 100%;
+   .main-content {
+      width: 100%;
+      height: 100%;
 
-   overflow-x: auto;
+      min-width: 0;
 
-   -webkit-overflow-scrolling: touch;
-
-   overscroll-behavior-x: contain;
-}
+      overflow: hidden;
+   }
 
 
-/* =========================================
-   SVG SAFETY
-========================================= */
-
-.main-content svg {
-   max-width: 100%;
-}
-
-
-/* =========================================
-   RESPONSIVE — TABLET
-   <= 900px
-========================================= */
-
-@media (max-width: 900px) {
+   /*
+      Error notification
+   */
 
    .chat-error-message {
-      width: calc(100% - 28px);
+      width:
+         calc(100% - 24px);
 
       margin-top: 10px;
 
-      padding: 10px 11px;
+      padding: 11px 12px;
 
-      font-size: 11.5px;
-   }
+      gap: 10px;
 
-
-   .chat-error-content {
-      gap: 8px;
-   }
-
-
-   .temporary-chat-indicator {
-      padding-left: 14px;
-      padding-right: 14px;
-
-      font-size: 12.5px;
-   }
-}
-
-
-/* =========================================
-   MOBILE SLIDER FOUNDATION
-   <= 760px
-========================================= */
-
-@media (max-width: 760px) {
-
-   /*
-      MOBILE STRUCTURE
-
-      Desktop:
-      Sidebar | ChatWindow
-
-      Mobile:
-      Sidebar | ChatWindow
-      <------ 200vw ------>
-
-      Only one panel is visible at a time.
-   */
-
-   .app-layout {
-      width: 200vw;
-      max-width: none;
-
-      height: 100vh;
-      height: 100svh;
-      height: 100dvh;
-
-      min-height: 0;
-
-      display: flex;
-      flex-direction: row;
-
-      overflow: hidden;
-
-      position: relative;
-
-      touch-action: pan-y;
-
-      transition:
-         transform 0.32s cubic-bezier(0.22,
-            1,
-            0.36,
-            1);
-
-      overscroll-behavior-x: none;
-   }
-
-
-   /* =====================================
-      MOBILE SIDEBAR PANEL
-   ===================================== */
-
-   .app-layout>.sidebar {
-      width: 100vw;
-      min-width: 100vw;
-      max-width: 100vw;
-
-      height: 100vh;
-      height: 100svh;
-      height: 100dvh;
-
-      flex: 0 0 100vw;
-
-      box-sizing: border-box;
-
-      overflow: hidden;
-
-      position: relative;
-   }
-
-
-   /* =====================================
-      MOBILE CHAT PANEL
-   ===================================== */
-
-   .app-layout>.main-content {
-      width: 100vw;
-      min-width: 100vw;
-      max-width: 100vw;
-
-      height: 100vh;
-      height: 100svh;
-      height: 100dvh;
-
-      flex: 0 0 100vw;
-
-      box-sizing: border-box;
-
-      overflow: hidden;
-
-      position: relative;
-
-      overscroll-behavior-x: contain;
-   }
-
-
-   /* =====================================
-      SIDEBAR VIEW
-   ===================================== */
-
-   .app-layout.mobile-view-sidebar {
-      transform: translate3d(0, 0, 0);
-   }
-
-
-   /* =====================================
-      CHAT VIEW
-   ===================================== */
-
-   .app-layout.mobile-view-chat {
-      transform: translate3d(-100vw, 0, 0);
-   }
-
-
-   /* =====================================
-      ERROR MESSAGE
-   ===================================== */
-
-   .chat-error-message {
-      width: calc(100% - 24px);
-
-      margin-top: 9px;
-
-      border-radius: 9px;
-   }
-
-
-   /* =====================================
-      TEMPORARY CHAT INDICATOR
-   ===================================== */
-
-   .temporary-chat-indicator {
-      padding-left: 12px;
-      padding-right: 12px;
-
-      gap: 6px;
-
-      font-size: 12px;
-   }
-
-
-   /* =====================================
-      MOBILE CHAT SCROLLING
-   ===================================== */
-
-   .main-content {
-      overscroll-behavior-x: contain;
-   }
-}
-
-
-/* =========================================
-   RESPONSIVE — MOBILE
-   <= 620px
-========================================= */
-
-@media (max-width: 620px) {
-
-   .app-layout {
-      width: 200vw;
-
-      height: 100vh;
-      height: 100svh;
-      height: 100dvh;
-   }
-
-
-   .app-layout>.sidebar {
-      width: 100vw;
-      min-width: 100vw;
-      max-width: 100vw;
-
-      flex-basis: 100vw;
-   }
-
-
-   .app-layout>.main-content {
-      width: 100vw;
-      min-width: 100vw;
-      max-width: 100vw;
-
-      flex-basis: 100vw;
-   }
-
-
-   .chat-error-message {
-      width: calc(100% - 20px);
-
-      margin-top: 8px;
-
-      padding: 9px 10px;
-
-      gap: 8px;
-
-      border-radius: 9px;
-
-      font-size: 11.5px;
-   }
-
-
-   .chat-error-content {
-      gap: 7px;
-   }
-
-
-   .chat-error-icon {
-      width: 18px;
-      height: 18px;
-
-      flex-basis: 18px;
-
-      font-size: 13px;
-   }
-
-
-   .chat-error-close {
-      width: 32px;
-      height: 32px;
-
-      flex-basis: 32px;
-
-      font-size: 17px;
-   }
-
-
-   .temporary-chat-indicator {
-      padding:
-         8px max(10px, env(safe-area-inset-right)) 8px max(10px, env(safe-area-inset-left));
-
-      gap: 4px 6px;
-
-      font-size: 11.5px;
-
-      line-height: 1.35;
-   }
-
-
-   .temporary-chat-indicator strong {
-      white-space: normal;
-   }
-
-
-   .temporary-chat-indicator>span:last-child {
-      flex-basis: 100%;
-   }
-}
-
-
-/* =========================================
-   VERY SMALL MOBILE
-   <= 420px
-========================================= */
-
-@media (max-width: 420px) {
-
-   .chat-error-message {
-      width: calc(100% - 16px);
-
-      margin-top: 6px;
-
-      padding: 8px 9px;
-
-      gap: 7px;
-
-      font-size: 11px;
-   }
-
-
-   .chat-error-content {
-      gap: 6px;
-   }
-
-
-   .chat-error-icon {
-      width: 17px;
-      height: 17px;
-
-      flex-basis: 17px;
-
-      font-size: 12px;
-   }
-
-
-   .chat-error-close {
-      width: 32px;
-      height: 32px;
-
-      flex-basis: 32px;
-   }
-
-
-   .temporary-chat-indicator {
-      padding:
-         8px max(8px, env(safe-area-inset-right)) 8px max(8px, env(safe-area-inset-left));
-
-      font-size: 11px;
-   }
-}
-
-
-/* =========================================
-   EXTRA SMALL MOBILE
-   <= 360px
-========================================= */
-
-@media (max-width: 360px) {
-
-   .chat-error-message {
-      width: calc(100% - 12px);
-
-      padding: 8px;
-
-      gap: 6px;
+      border-radius:
+         var(--chat-radius-md);
    }
 
 
    .chat-error-text {
-      font-size: 10.5px;
+      font-size: 12px;
    }
 
+
+   /*
+      Temporary indicator
+   */
 
    .temporary-chat-indicator {
-      padding:
-         7px max(8px, env(safe-area-inset-right)) 7px max(8px, env(safe-area-inset-left));
+      width:
+         calc(100% - 24px);
 
-      font-size: 10.5px;
+      margin-top: 8px;
+
+      padding: 8px 12px;
+
+      border-radius:
+         12px;
+
+      font-size: 11px;
+
+      text-align: center;
    }
 
-
-   .chat-error-close {
-      width: 30px;
-      height: 30px;
-
-      flex-basis: 30px;
-   }
 }
 
 
-/* =========================================
-   ULTRA SMALL DEVICES
-   <= 320px
-========================================= */
+/* =========================================================
+   11. SMALL MOBILE DEVICES
+   ========================================================= */
 
-@media (max-width: 320px) {
+@media (max-width: 480px) {
 
    .chat-error-message {
-      width: calc(100% - 10px);
+      width:
+         calc(100% - 16px);
 
-      padding: 7px;
+      margin-top: 8px;
+
+      padding: 10px;
    }
 
 
    .chat-error-content {
-      gap: 5px;
+      gap: 8px;
+   }
+
+
+   .chat-error-icon {
+      width: 25px;
+      height: 25px;
+
+      font-size: 12px;
+   }
+
+
+   .chat-error-text {
+      font-size: 11.5px;
    }
 
 
    .chat-error-close {
-      width: 29px;
-      height: 29px;
+      width: 27px;
+      height: 27px;
 
-      flex-basis: 29px;
-
-      font-size: 16px;
+      font-size: 20px;
    }
 
 
    .temporary-chat-indicator {
-      font-size: 10px;
+      width:
+         calc(100% - 16px);
+
+      gap: 5px;
+
+      padding: 8px 10px;
+
+      font-size: 10.5px;
    }
+
 }
 
 
-/* =========================================
-   ACCESSIBILITY
-========================================= */
+/* =========================================================
+   12. VERY SMALL SCREENS
+   ========================================================= */
 
-@media (prefers-reduced-motion: reduce) {
+@media (max-width: 360px) {
 
-   .app-layout {
-      transition: none;
+   .temporary-chat-indicator>span:last-child {
+      width: 100%;
    }
 
 
    .chat-error-message {
+      align-items: flex-start;
+   }
+
+}
+
+
+/* =========================================================
+   13. ACCESSIBILITY
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+   .chat-error-message,
+   .app-layout[data-mobile-sidebar-open="true"] .main-content::before {
+
       animation: none;
    }
 
@@ -941,91 +594,41 @@ button:disabled {
    .chat-error-close {
       transition: none;
    }
+
 }
 
 
-/* =========================================
-   TOUCH DEVICES
-========================================= */
+/* =========================================================
+   14. ANIMATIONS
+   ========================================================= */
 
-@media (hover: none) and (pointer: coarse) {
+@keyframes chatErrorEnter {
 
-   .chat-error-close:hover {
-      color: #858d9a;
+   from {
+      opacity: 0;
 
-      background: transparent;
-
-      border-color: transparent;
+      transform:
+         translateY(-6px);
    }
 
+   to {
+      opacity: 1;
 
-   .chat-error-close:active:not(:disabled) {
-      color: #f1f2f4;
-
-      background: rgba(255, 255, 255, 0.08);
-
-      transform: scale(0.96);
+      transform:
+         translateY(0);
    }
+
 }
 
 
-/* =========================================
-   LANDSCAPE MOBILE
-========================================= */
+@keyframes sidebarOverlayIn {
 
-@media (max-width: 760px) and (orientation: landscape) {
-
-   .app-layout,
-   .app-layout>.sidebar,
-   .app-layout>.main-content {
-      height: 100vh;
-      height: 100svh;
-      height: 100dvh;
+   from {
+      opacity: 0;
    }
 
-
-   .temporary-chat-indicator {
-      padding-top: 6px;
-      padding-bottom: 6px;
-   }
-}
-
-
-/* =========================================
-   SAFE AREA SUPPORT
-========================================= */
-
-@supports (padding: env(safe-area-inset-bottom)) {
-
-   .main-content {
-      padding-bottom: env(safe-area-inset-bottom);
-   }
-}
-
-
-/* =========================================
-   PRINT SAFETY
-========================================= */
-
-@media print {
-
-   .app-layout {
-      width: 100%;
-      height: auto;
-
-      overflow: visible;
-
-      background: #ffffff;
-      color: #000000;
+   to {
+      opacity: 1;
    }
 
-
-   .main-content {
-      height: auto;
-
-      overflow: visible;
-
-      background: #ffffff;
-      color: #000000;
-   }
 }

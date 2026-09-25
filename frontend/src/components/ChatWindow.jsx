@@ -1,4 +1,3 @@
-
 import {
    useEffect,
    useRef,
@@ -9,6 +8,7 @@ import {
    Sparkles,
    Globe,
    Zap,
+   Menu,
 } from "lucide-react";
 
 import ChatMessage from "./ChatMessage";
@@ -34,23 +34,17 @@ function ChatWindow({
 
    onModeChange,
 
-   // ==========================================
-   // CURRENT CHAT ID
-   // ==========================================
-
    currentChatId = null,
-
-   // ==========================================
-   // EXPORT CHAT
-   // ==========================================
 
    onExportChat,
 
+   onBackToChats,
+
    // ==========================================
-   // MOBILE NAVIGATION
+   // SIDEBAR TOGGLE
    // ==========================================
 
-   onBackToChats,
+   onToggleSidebar,
 
 }) {
 
@@ -69,7 +63,16 @@ function ChatWindow({
    // REFS
    // ==========================================
 
+   const messagesContainerRef =
+      useRef(null);
+
    const messagesEndRef =
+      useRef(null);
+
+   const shouldAutoScrollRef =
+      useRef(true);
+
+   const exportMenuRef =
       useRef(null);
 
 
@@ -93,7 +96,6 @@ function ChatWindow({
       "web",
    ];
 
-
    const activeMode =
       allowedModes.includes(mode)
          ? mode
@@ -113,19 +115,119 @@ function ChatWindow({
 
 
    // ==========================================
+   // CHECK WHETHER CHAT IS BUSY
+   // ==========================================
+
+   const isBusy =
+      Boolean(isLoading) ||
+      Boolean(regeneratingMessageId);
+
+
+   // ==========================================
+   // CHECK WHETHER USER IS NEAR BOTTOM
+   // ==========================================
+
+   const isNearBottom = (
+      container,
+      threshold = 120
+   ) => {
+
+      if (!container) {
+         return true;
+      }
+
+      const distanceFromBottom =
+         container.scrollHeight -
+         container.scrollTop -
+         container.clientHeight;
+
+      return distanceFromBottom <= threshold;
+
+   };
+
+
+   // ==========================================
+   // TRACK USER SCROLL POSITION
+   // ==========================================
+
+   const handleMessagesScroll = () => {
+
+      const container =
+         messagesContainerRef.current;
+
+      if (!container) {
+         return;
+      }
+
+      shouldAutoScrollRef.current =
+         isNearBottom(container);
+
+   };
+
+
+   // ==========================================
    // AUTO SCROLL
    // ==========================================
 
    useEffect(() => {
 
-      messagesEndRef.current?.scrollIntoView({
-         behavior: "smooth",
+      const container =
+         messagesContainerRef.current;
+
+      const target =
+         messagesEndRef.current;
+
+      if (!container || !target) {
+         return;
+      }
+
+      if (!shouldAutoScrollRef.current) {
+         return;
+      }
+
+      requestAnimationFrame(() => {
+
+         target.scrollIntoView({
+            behavior: isStreaming
+               ? "auto"
+               : "smooth",
+            block: "end",
+         });
+
       });
 
    }, [
       normalizedMessages.length,
       normalizedMessages,
       isLoading,
+      isStreaming,
+   ]);
+
+
+   // ==========================================
+   // RESET SCROLL WHEN CHAT CHANGES
+   // ==========================================
+
+   useEffect(() => {
+
+      shouldAutoScrollRef.current = true;
+
+      requestAnimationFrame(() => {
+
+         const container =
+            messagesContainerRef.current;
+
+         if (!container) {
+            return;
+         }
+
+         container.scrollTop =
+            container.scrollHeight;
+
+      });
+
+   }, [
+      currentChatId,
    ]);
 
 
@@ -143,21 +245,111 @@ function ChatWindow({
 
 
    // ==========================================
+   // CLOSE EXPORT MENU ON OUTSIDE CLICK
+   // ==========================================
+
+   useEffect(() => {
+
+      if (!isExportMenuOpen) {
+         return;
+      }
+
+      const handlePointerDown = (
+         event
+      ) => {
+
+         const wrapper =
+            exportMenuRef.current;
+
+         if (
+            wrapper &&
+            !wrapper.contains(
+               event.target
+            )
+         ) {
+
+            setIsExportMenuOpen(false);
+
+         }
+
+      };
+
+
+      document.addEventListener(
+         "pointerdown",
+         handlePointerDown
+      );
+
+
+      return () => {
+
+         document.removeEventListener(
+            "pointerdown",
+            handlePointerDown
+         );
+
+      };
+
+   }, [
+      isExportMenuOpen,
+   ]);
+
+
+   // ==========================================
+   // CLOSE EXPORT MENU WITH ESCAPE
+   // ==========================================
+
+   useEffect(() => {
+
+      if (!isExportMenuOpen) {
+         return;
+      }
+
+      const handleKeyDown = (
+         event
+      ) => {
+
+         if (
+            event.key === "Escape"
+         ) {
+
+            setIsExportMenuOpen(false);
+
+         }
+
+      };
+
+
+      document.addEventListener(
+         "keydown",
+         handleKeyDown
+      );
+
+
+      return () => {
+
+         document.removeEventListener(
+            "keydown",
+            handleKeyDown
+         );
+
+      };
+
+   }, [
+      isExportMenuOpen,
+   ]);
+
+
+   // ==========================================
    // MODE CHANGE
    // ==========================================
 
    const handleModeChange =
       (nextMode) => {
 
-         if (
-            isLoading ||
-            regeneratingMessageId
-         ) {
-
+         if (isBusy) {
             return;
-
          }
-
 
          if (
             !allowedModes.includes(
@@ -166,9 +358,7 @@ function ChatWindow({
          ) {
 
             return;
-
          }
-
 
          if (
             typeof onModeChange !==
@@ -176,9 +366,14 @@ function ChatWindow({
          ) {
 
             return;
-
          }
 
+         if (
+            nextMode === activeMode
+         ) {
+
+            return;
+         }
 
          onModeChange(
             nextMode
@@ -194,15 +389,9 @@ function ChatWindow({
    const handleRegenerate =
       (messageIndex) => {
 
-         if (
-            isLoading ||
-            regeneratingMessageId
-         ) {
-
+         if (isBusy) {
             return;
-
          }
-
 
          if (
             typeof onRegenerateMessage !==
@@ -210,9 +399,7 @@ function ChatWindow({
          ) {
 
             return;
-
          }
-
 
          if (
             messageIndex < 0 ||
@@ -221,9 +408,7 @@ function ChatWindow({
          ) {
 
             return;
-
          }
-
 
          const message =
             normalizedMessages[
@@ -238,13 +423,8 @@ function ChatWindow({
          ) {
 
             return;
-
          }
 
-
-         // ======================================
-         // ONLY LATEST ASSISTANT MESSAGE
-         // ======================================
 
          if (
             messageIndex !==
@@ -252,20 +432,19 @@ function ChatWindow({
          ) {
 
             return;
-
          }
 
-
-         // ======================================
-         // NEVER REGENERATE STREAMING MESSAGE
-         // ======================================
 
          if (
             message.isStreaming
          ) {
 
             return;
+         }
 
+
+         if (!message.id) {
+            return;
          }
 
 
@@ -284,15 +463,9 @@ function ChatWindow({
       format
    ) => {
 
-      if (
-         isLoading ||
-         regeneratingMessageId
-      ) {
-
+      if (isBusy) {
          return;
-
       }
-
 
       if (
          typeof onExportChat !==
@@ -300,18 +473,14 @@ function ChatWindow({
       ) {
 
          return;
-
       }
-
 
       if (
          normalizedMessages.length === 0
       ) {
 
          return;
-
       }
-
 
       const allowedFormats = [
          "pdf",
@@ -332,14 +501,12 @@ function ChatWindow({
          );
 
          return;
-
       }
 
 
       onExportChat(
          format
       );
-
 
       setIsExportMenuOpen(
          false
@@ -360,11 +527,32 @@ function ChatWindow({
       ) {
 
          return;
-
       }
 
+      if (isBusy) {
+         return;
+      }
 
       onBackToChats();
+
+   };
+
+
+   // ==========================================
+   // SIDEBAR TOGGLE
+   // ==========================================
+
+   const handleToggleSidebar = () => {
+
+      if (
+         typeof onToggleSidebar !==
+         "function"
+      ) {
+
+         return;
+      }
+
+      onToggleSidebar();
 
    };
 
@@ -375,8 +563,10 @@ function ChatWindow({
 
    return (
 
-      <section className="chat-window">
-
+      <section
+         className="chat-window"
+         aria-label="EchoMind chat"
+      >
 
          {/* =====================================
              CHAT HEADER
@@ -393,6 +583,34 @@ function ChatWindow({
 
 
                {/* ==================================
+                   SIDEBAR TOGGLE
+               ================================== */}
+
+               {typeof onToggleSidebar ===
+                  "function" && (
+
+                     <button
+                        type="button"
+                        className="sidebar-toggle-button"
+                        onClick={
+                           handleToggleSidebar
+                        }
+                        aria-label="Open chats sidebar"
+                        title="Open chats sidebar"
+                     >
+
+                        <Menu
+                           size={19}
+                           strokeWidth={2}
+                           aria-hidden="true"
+                        />
+
+                     </button>
+
+                  )}
+
+
+               {/* ==================================
                    MOBILE BACK TO CHATS
                ================================== */}
 
@@ -405,11 +623,13 @@ function ChatWindow({
                         onClick={
                            handleBackToChats
                         }
+                        disabled={isBusy}
                         aria-label="Back to chats"
                         title="Back to chats"
                      >
 
                         <span
+                           className="mobile-back-icon"
                            aria-hidden="true"
                         >
                            ←
@@ -424,17 +644,27 @@ function ChatWindow({
                   )}
 
 
-               <div className="chat-title-icon">
+               {/* ==================================
+                   CHAT TITLE ICON
+               ================================== */}
+
+               <div
+                  className="chat-title-icon"
+                  aria-hidden="true"
+               >
 
                   <Sparkles
                      size={18}
-                     aria-hidden="true"
                   />
 
                </div>
 
 
-               <div>
+               {/* ==================================
+                   CHAT TITLE CONTENT
+               ================================== */}
+
+               <div className="chat-title-content">
 
                   <h1>
                      EchoMind
@@ -444,7 +674,11 @@ function ChatWindow({
                   <span className="chat-status">
 
                      <span
-                        className="status-dot"
+                        className={
+                           isStreaming
+                              ? "status-dot streaming"
+                              : "status-dot"
+                        }
                         aria-hidden="true"
                      />
 
@@ -455,6 +689,7 @@ function ChatWindow({
                   </span>
 
                </div>
+
 
             </div>
 
@@ -470,12 +705,18 @@ function ChatWindow({
                    EXPORT CHAT
                ================================== */}
 
-               <div className="chat-export-wrapper">
-
+               <div
+                  ref={exportMenuRef}
+                  className="chat-export-wrapper"
+               >
 
                   <button
                      type="button"
-                     className="chat-export-button"
+                     className={
+                        isExportMenuOpen
+                           ? "chat-export-button open"
+                           : "chat-export-button"
+                     }
                      onClick={() =>
                         setIsExportMenuOpen(
                            (previous) =>
@@ -483,10 +724,7 @@ function ChatWindow({
                         )
                      }
                      disabled={
-                        isLoading ||
-                        Boolean(
-                           regeneratingMessageId
-                        ) ||
+                        isBusy ||
                         normalizedMessages.length === 0
                      }
                      aria-haspopup="menu"
@@ -499,7 +737,6 @@ function ChatWindow({
                      <span>
                         Export
                      </span>
-
 
                      <span
                         className="chat-export-arrow"
@@ -516,12 +753,8 @@ function ChatWindow({
                      <div
                         className="chat-export-menu"
                         role="menu"
+                        aria-label="Export conversation"
                      >
-
-
-                        {/* ==========================
-                            PDF
-                        ========================== */}
 
                         <button
                            type="button"
@@ -533,7 +766,7 @@ function ChatWindow({
                            }
                         >
 
-                           <span>
+                           <span aria-hidden="true">
                               📄
                            </span>
 
@@ -543,10 +776,6 @@ function ChatWindow({
 
                         </button>
 
-
-                        {/* ==========================
-                            TXT
-                        ========================== */}
 
                         <button
                            type="button"
@@ -558,7 +787,7 @@ function ChatWindow({
                            }
                         >
 
-                           <span>
+                           <span aria-hidden="true">
                               📝
                            </span>
 
@@ -568,10 +797,6 @@ function ChatWindow({
 
                         </button>
 
-
-                        {/* ==========================
-                            MARKDOWN
-                        ========================== */}
 
                         <button
                            type="button"
@@ -583,7 +808,7 @@ function ChatWindow({
                            }
                         >
 
-                           <span>
+                           <span aria-hidden="true">
                               📋
                            </span>
 
@@ -592,7 +817,6 @@ function ChatWindow({
                            </span>
 
                         </button>
-
 
                      </div>
 
@@ -611,11 +835,6 @@ function ChatWindow({
                   aria-label="Chat mode"
                >
 
-
-                  {/* ==================================
-                      AUTO MODE
-                  ================================== */}
-
                   <button
                      type="button"
                      className={
@@ -628,11 +847,9 @@ function ChatWindow({
                            "auto"
                         )
                      }
-                     disabled={
-                        isLoading ||
-                        Boolean(
-                           regeneratingMessageId
-                        )
+                     disabled={isBusy}
+                     aria-pressed={
+                        activeMode === "auto"
                      }
                      title="Automatically decide whether web search is needed"
                   >
@@ -649,10 +866,6 @@ function ChatWindow({
                   </button>
 
 
-                  {/* ==================================
-                      GEMINI MODE
-                  ================================== */}
-
                   <button
                      type="button"
                      className={
@@ -665,11 +878,9 @@ function ChatWindow({
                            "gemini"
                         )
                      }
-                     disabled={
-                        isLoading ||
-                        Boolean(
-                           regeneratingMessageId
-                        )
+                     disabled={isBusy}
+                     aria-pressed={
+                        activeMode === "gemini"
                      }
                      title="Use EchoMind without web search"
                   >
@@ -686,10 +897,6 @@ function ChatWindow({
                   </button>
 
 
-                  {/* ==================================
-                      WEB MODE
-                  ================================== */}
-
                   <button
                      type="button"
                      className={
@@ -702,11 +909,9 @@ function ChatWindow({
                            "web"
                         )
                      }
-                     disabled={
-                        isLoading ||
-                        Boolean(
-                           regeneratingMessageId
-                        )
+                     disabled={isBusy}
+                     aria-pressed={
+                        activeMode === "web"
                      }
                      title="Always use web search"
                   >
@@ -722,12 +927,9 @@ function ChatWindow({
 
                   </button>
 
-
                </div>
 
-
             </div>
-
 
          </header>
 
@@ -736,23 +938,26 @@ function ChatWindow({
              MESSAGE AREA
          ===================================== */}
 
-         <div className="chat-messages">
-
-
-            {/* ==================================
-                WELCOME SCREEN
-            ================================== */}
+         <div
+            ref={messagesContainerRef}
+            className="chat-messages"
+            onScroll={
+               handleMessagesScroll
+            }
+         >
 
             {normalizedMessages.length === 0 &&
                !isLoading && (
 
                   <div className="chat-welcome">
 
-                     <div className="welcome-icon">
+                     <div
+                        className="welcome-icon"
+                        aria-hidden="true"
+                     >
 
                         <Sparkles
                            size={28}
-                           aria-hidden="true"
                         />
 
                      </div>
@@ -774,10 +979,6 @@ function ChatWindow({
                )}
 
 
-            {/* ==================================
-                MESSAGES
-            ================================== */}
-
             {normalizedMessages.map(
                (message, index) => (
 
@@ -785,70 +986,45 @@ function ChatWindow({
 
                      key={
                         message.id ||
-                        `${message.role} -${index} `
+                        `${message.role}-${index}`
                      }
-
 
                      role={
                         message.role
                      }
 
-
                      message={
                         message.message
                      }
-
 
                      sources={
                         message.sources
                      }
 
-
                      usedWebSearch={
                         message.usedWebSearch
                      }
-
 
                      error={
                         message.error
                      }
 
-
-                     /*
-                        ==================================
-                        FEEDBACK DATA
-                        ==================================
-
-                        These values are passed to
-                        ChatMessage.jsx, which passes them
-                        to FeedbackButtons.jsx.
-                     */
-
                      chatId={
                         currentChatId
                      }
-
 
                      messageId={
                         message.id
                      }
 
-
                      feedback={
-                        message.feedback || null
+                        message.feedback ||
+                        null
                      }
-
-
-                     /*
-                        ==================================
-                        STREAMING STATE
-                        ==================================
-                     */
 
                      isStreaming={
                         message.isStreaming === true
                      }
-
 
                      onRegenerate={
 
@@ -869,7 +1045,6 @@ function ChatWindow({
 
                      }
 
-
                      isRegenerating={
 
                         message.id ===
@@ -883,10 +1058,6 @@ function ChatWindow({
             )}
 
 
-            {/* ==================================
-                TYPING INDICATOR
-            ================================== */}
-
             {isLoading &&
                !isStreaming &&
                !regeneratingMessageId && (
@@ -896,16 +1067,11 @@ function ChatWindow({
                )}
 
 
-            {/* ==================================
-                AUTO SCROLL TARGET
-            ================================== */}
-
             <div
-               ref={
-                  messagesEndRef
-               }
+               ref={messagesEndRef}
+               className="chat-scroll-anchor"
+               aria-hidden="true"
             />
-
 
          </div>
 
@@ -921,14 +1087,10 @@ function ChatWindow({
             }
 
             disabled={
-               isLoading ||
-               Boolean(
-                  regeneratingMessageId
-               )
+               isBusy
             }
 
          />
-
 
       </section>
 
@@ -938,4 +1100,3 @@ function ChatWindow({
 
 
 export default ChatWindow;
-

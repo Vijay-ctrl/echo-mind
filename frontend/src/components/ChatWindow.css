@@ -1,6 +1,6 @@
-/* =========================================
+/* =========================================================
    CHAT WINDOW
-========================================= */
+   ========================================================= */
 
 .chat-window {
    width: 100%;
@@ -8,33 +8,30 @@
    min-width: 0;
    min-height: 0;
    flex: 1 1 auto;
-
    display: flex;
    flex-direction: column;
-
    overflow: hidden;
    box-sizing: border-box;
-
    background:
       radial-gradient(circle at 50% -10%,
          rgba(255, 255, 255, 0.025),
          transparent 35%),
       #0b0d12;
-
    color: #f1f2f5;
-
-   /* Let the parent handle horizontal swipe gestures. */
    touch-action: auto;
 }
 
 
-/* =========================================
+/* =========================================================
    CHAT HEADER
-========================================= */
+   ========================================================= */
 
 .chat-header {
+   position: relative;
+   width: 100%;
+   min-width: 0;
    min-height: 78px;
-   flex-shrink: 0;
+   flex: 0 0 auto;
 
    display: flex;
    align-items: center;
@@ -50,16 +47,16 @@
    backdrop-filter: blur(12px);
    -webkit-backdrop-filter: blur(12px);
 
-   position: relative;
    z-index: 20;
-
    box-sizing: border-box;
+
+   overflow: visible !important;
 }
 
 
-/* =========================================
+/* =========================================================
    CHAT HEADER LEFT
-========================================= */
+   ========================================================= */
 
 .chat-header-left {
    flex: 1 1 auto;
@@ -70,13 +67,15 @@
 
    gap: 12px;
 
-   overflow: hidden;
+   box-sizing: border-box;
+
+   overflow: visible !important;
 }
 
 
-/* =========================================
+/* =========================================================
    CHAT HEADER RIGHT
-========================================= */
+   ========================================================= */
 
 .chat-header-right {
    flex: 0 0 auto;
@@ -87,16 +86,184 @@
    justify-content: flex-end;
 
    gap: 10px;
+
+   box-sizing: border-box;
+
+   overflow: visible !important;
 }
 
 
-/* =========================================
+/* =========================================================
+   SIDEBAR / HAMBURGER BUTTON
+   ========================================================= */
+
+.sidebar-toggle-button {
+   width: 36px;
+   height: 36px;
+
+   min-width: 36px;
+   min-height: 36px;
+
+   flex: 0 0 36px;
+
+   display: none;
+
+   align-items: center;
+   justify-content: center;
+
+   padding: 0;
+   margin: 0;
+
+   box-sizing: border-box;
+
+   border: 1px solid #303641;
+   border-radius: 9px;
+
+   color: #dfe3e8;
+
+   background:
+      linear-gradient(145deg,
+         #1d222a,
+         #151920);
+
+   cursor: pointer;
+
+   overflow: hidden;
+
+   transition:
+      background 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease,
+      transform 0.15s ease,
+      box-shadow 0.18s ease;
+}
+
+.sidebar-toggle-button:hover {
+   color: #ffffff;
+
+   border-color: #4a5361;
+
+   background:
+      linear-gradient(145deg,
+         #272d37,
+         #1b2028);
+
+   transform: translateY(-1px);
+
+   box-shadow:
+      0 5px 14px rgba(0, 0, 0, 0.22);
+}
+
+.sidebar-toggle-button:active {
+   transform: translateY(0);
+}
+
+.sidebar-toggle-button:focus-visible {
+   outline: 2px solid #8b95a5;
+   outline-offset: 2px;
+}
+
+.sidebar-toggle-button svg {
+   width: 19px;
+   height: 19px;
+
+   flex: 0 0 auto;
+}
+
+
+/* =========================================================
+   MOBILE BACK TO CHATS
+   ========================================================= */
+
+.mobile-back-to-chats {
+   display: none;
+
+   flex: 0 0 auto;
+
+   align-items: center;
+   justify-content: center;
+
+   gap: 6px;
+
+   min-height: 34px;
+
+   padding: 0 9px;
+
+   border: 1px solid #303641;
+   border-radius: 9px;
+
+   color: #cfd4dc;
+
+   background:
+      linear-gradient(145deg,
+         #1d222a,
+         #151920);
+
+   font-family: inherit;
+   font-size: 11px;
+   font-weight: 600;
+   line-height: 1;
+
+   cursor: pointer;
+   user-select: none;
+
+   box-sizing: border-box;
+
+   transition:
+      background 0.18s ease,
+      border-color 0.18s ease,
+      color 0.18s ease,
+      transform 0.15s ease,
+      opacity 0.18s ease;
+}
+
+.mobile-back-to-chats:hover:not(:disabled) {
+   color: #ffffff;
+
+   border-color: #4a5361;
+
+   background:
+      linear-gradient(145deg,
+         #272d37,
+         #1b2028);
+
+   transform: translateY(-1px);
+}
+
+.mobile-back-to-chats:active:not(:disabled) {
+   transform: translateY(0);
+}
+
+.mobile-back-to-chats:focus-visible {
+   outline: 2px solid #8b95a5;
+   outline-offset: 2px;
+}
+
+.mobile-back-to-chats:disabled {
+   opacity: 0.45;
+   cursor: not-allowed;
+}
+
+.mobile-back-icon {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+
+   font-size: 15px;
+   line-height: 1;
+}
+
+
+/* =========================================================
    CHAT TITLE ICON
-========================================= */
+   ========================================================= */
 
 .chat-title-icon {
    width: 38px;
    height: 38px;
+
+   min-width: 38px;
+
    flex: 0 0 38px;
 
    display: flex;
@@ -120,11 +287,26 @@
 }
 
 
-/* =========================================
+/* =========================================================
+   CHAT TITLE CONTENT
+   ========================================================= */
+
+.chat-title-content {
+   min-width: 0;
+   flex: 1 1 auto;
+
+   overflow: hidden;
+
+   box-sizing: border-box;
+}
+
+
+/* =========================================================
    CHAT TITLE
-========================================= */
+   ========================================================= */
 
 .chat-header h1 {
+   width: 100%;
    max-width: 100%;
    min-width: 0;
 
@@ -143,9 +325,9 @@
 }
 
 
-/* =========================================
+/* =========================================================
    CHAT STATUS
-========================================= */
+   ========================================================= */
 
 .chat-status {
    display: flex;
@@ -162,13 +344,14 @@
 }
 
 
-/* =========================================
+/* =========================================================
    STATUS DOT
-========================================= */
+   ========================================================= */
 
 .status-dot {
    width: 6px;
    height: 6px;
+
    flex: 0 0 6px;
 
    border-radius: 50%;
@@ -180,6 +363,13 @@
 
    animation:
       statusPulse 2.4s ease-in-out infinite;
+}
+
+.status-dot.streaming {
+   background: #8b7cff;
+
+   box-shadow:
+      0 0 8px rgba(139, 124, 255, 0.45);
 }
 
 @keyframes statusPulse {
@@ -195,9 +385,9 @@
 }
 
 
-/* =========================================
+/* =========================================================
    CHAT EXPORT WRAPPER
-========================================= */
+   ========================================================= */
 
 .chat-export-wrapper {
    position: relative;
@@ -206,14 +396,22 @@
 
    display: flex;
    align-items: center;
+
+   min-width: 0;
+
+   overflow: visible !important;
+
+   z-index: 2000;
 }
 
 
-/* =========================================
+/* =========================================================
    CHAT EXPORT BUTTON
-========================================= */
+   ========================================================= */
 
 .chat-export-button {
+   position: relative;
+
    min-width: 78px;
    min-height: 38px;
 
@@ -222,6 +420,7 @@
    justify-content: center;
 
    gap: 7px;
+
    padding: 0 13px;
 
    border: 1px solid #303641;
@@ -243,6 +442,8 @@
    user-select: none;
 
    box-sizing: border-box;
+
+   z-index: 2001;
 
    transition:
       background 0.2s ease,
@@ -276,6 +477,17 @@
       0 2px 6px rgba(0, 0, 0, 0.18);
 }
 
+.chat-export-button.open {
+   color: #ffffff;
+
+   border-color: #4a5361;
+
+   background:
+      linear-gradient(145deg,
+         #272d37,
+         #1b2028);
+}
+
 .chat-export-button:focus-visible {
    outline: 2px solid #8b95a5;
    outline-offset: 2px;
@@ -284,15 +496,14 @@
 .chat-export-button:disabled {
    opacity: 0.45;
    cursor: not-allowed;
-
    transform: none;
    box-shadow: none;
 }
 
 
-/* =========================================
+/* =========================================================
    EXPORT ARROW
-========================================= */
+   ========================================================= */
 
 .chat-export-arrow {
    width: 14px;
@@ -312,23 +523,18 @@
       color 0.2s ease;
 }
 
+.chat-export-button.open .chat-export-arrow {
+   transform: rotate(180deg);
+}
+
 .chat-export-button:hover:not(:disabled) .chat-export-arrow {
    color: #ffffff;
 }
 
 
-/* =========================================
-   EXPORT MENU OPEN STATE
-========================================= */
-
-.chat-export-wrapper:has(.chat-export-menu) .chat-export-arrow {
-   transform: rotate(180deg);
-}
-
-
-/* =========================================
+/* =========================================================
    EXPORT MENU
-========================================= */
+   ========================================================= */
 
 .chat-export-menu {
    position: absolute;
@@ -336,7 +542,9 @@
    top: calc(100% + 10px);
    right: 0;
 
-   z-index: 1000;
+   z-index: 9999;
+
+   display: block;
 
    width: 210px;
    max-width: calc(100vw - 20px);
@@ -373,9 +581,9 @@
 }
 
 
-/* =========================================
+/* =========================================================
    EXPORT MENU BUTTON
-========================================= */
+   ========================================================= */
 
 .chat-export-menu button {
    width: 100%;
@@ -386,6 +594,7 @@
    align-items: center;
 
    gap: 12px;
+
    padding: 6px 10px;
    margin: 0;
 
@@ -418,6 +627,7 @@
    color: #ffffff;
 
    background: rgba(255, 255, 255, 0.07);
+
    border-color: rgba(255, 255, 255, 0.06);
 
    transform: translateX(2px);
@@ -434,13 +644,14 @@
 }
 
 
-/* =========================================
+/* =========================================================
    EXPORT ICON
-========================================= */
+   ========================================================= */
 
 .chat-export-menu button>span:first-child {
    width: 32px;
    height: 32px;
+
    flex: 0 0 32px;
 
    display: flex;
@@ -468,9 +679,9 @@
 }
 
 
-/* =========================================
+/* =========================================================
    EXPORT TEXT
-========================================= */
+   ========================================================= */
 
 .chat-export-menu button>span:last-child {
    flex: 1 1 auto;
@@ -482,15 +693,16 @@
 
    white-space: nowrap;
    overflow: hidden;
+
    text-overflow: ellipsis;
 
    text-align: left;
 }
 
 
-/* =========================================
+/* =========================================================
    CHAT MODE SELECTOR
-========================================= */
+   ========================================================= */
 
 .chat-mode-selector {
    flex: 0 0 auto;
@@ -510,12 +722,14 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.025);
 
    box-sizing: border-box;
+
+   min-width: 0;
 }
 
 
-/* =========================================
+/* =========================================================
    MODE BUTTON
-========================================= */
+   ========================================================= */
 
 .mode-button {
    min-width: 54px;
@@ -526,6 +740,7 @@
    justify-content: center;
 
    gap: 6px;
+
    padding: 6px 10px;
 
    border: 1px solid transparent;
@@ -558,14 +773,16 @@
 
 .mode-button:hover:not(:disabled) {
    color: #dfe3e8;
+
    background: rgba(255, 255, 255, 0.055);
+
    border-color: rgba(255, 255, 255, 0.06);
 }
 
 
-/* =========================================
+/* =========================================================
    ACTIVE MODE
-========================================= */
+   ========================================================= */
 
 .mode-button.active {
    color: #f4f5f7;
@@ -594,9 +811,9 @@
 }
 
 
-/* =========================================
+/* =========================================================
    MODE BUTTON FOCUS
-========================================= */
+   ========================================================= */
 
 .mode-button:focus-visible {
    outline: 2px solid #8b95a5;
@@ -604,26 +821,26 @@
 }
 
 
-/* =========================================
+/* =========================================================
    MODE BUTTON DISABLED
-========================================= */
+   ========================================================= */
 
 .mode-button:disabled {
    opacity: 0.45;
    cursor: not-allowed;
-
    transform: none;
 }
 
 
-/* =========================================
+/* =========================================================
    MESSAGE AREA
-========================================= */
+   ========================================================= */
 
 .chat-messages {
    flex: 1 1 auto;
 
    width: 100%;
+
    min-width: 0;
    min-height: 0;
 
@@ -638,19 +855,18 @@
 
    overscroll-behavior: contain;
 
-   /* Vertical scrolling stays inside chat.
-     Parent layout can handle horizontal gestures. */
    touch-action: pan-y;
 
    scrollbar-width: thin;
+
    scrollbar-color:
       #303640 transparent;
 }
 
 
-/* =========================================
+/* =========================================================
    MESSAGE AREA SCROLLBAR
-========================================= */
+   ========================================================= */
 
 .chat-messages::-webkit-scrollbar {
    width: 7px;
@@ -670,9 +886,9 @@
 }
 
 
-/* =========================================
+/* =========================================================
    WELCOME SCREEN
-========================================= */
+   ========================================================= */
 
 .chat-welcome {
    width: 100%;
@@ -680,6 +896,7 @@
 
    display: flex;
    flex-direction: column;
+
    align-items: center;
    justify-content: center;
 
@@ -706,9 +923,9 @@
 }
 
 
-/* =========================================
+/* =========================================================
    WELCOME ICON
-========================================= */
+   ========================================================= */
 
 .welcome-icon {
    width: 58px;
@@ -738,9 +955,9 @@
 }
 
 
-/* =========================================
+/* =========================================================
    WELCOME TEXT
-========================================= */
+   ========================================================= */
 
 .chat-welcome h2 {
    margin: 0 0 9px;
@@ -766,9 +983,9 @@
 }
 
 
-/* =========================================
+/* =========================================================
    CHAT MESSAGE COMPONENT SPACING
-========================================= */
+   ========================================================= */
 
 .chat-messages>* {
    min-width: 0;
@@ -776,9 +993,23 @@
 }
 
 
-/* =========================================
+/* =========================================================
+   SCROLL ANCHOR
+   ========================================================= */
+
+.chat-scroll-anchor {
+   width: 100%;
+   height: 1px;
+
+   flex: 0 0 1px;
+
+   pointer-events: none;
+}
+
+
+/* =========================================================
    REGENERATE STATE SUPPORT
-========================================= */
+   ========================================================= */
 
 .chat-messages .regenerate-answer-button {
    flex-shrink: 0;
@@ -789,9 +1020,9 @@
 }
 
 
-/* =========================================
+/* =========================================================
    TYPING INDICATOR
-========================================= */
+   ========================================================= */
 
 .chat-messages .typing-row {
    display: flex;
@@ -800,16 +1031,76 @@
    gap: 10px;
 
    width: 100%;
+
    min-width: 0;
    max-width: 100%;
 }
 
 
-/* =========================================
-   TABLET
-========================================= */
+/* =========================================================
+   GLOBAL WIDTH SAFETY
+   ========================================================= */
 
-@media (max-width: 1000px) {
+html,
+body,
+#root {
+   width: 100%;
+   max-width: 100%;
+   min-width: 0;
+
+   overflow-x: hidden;
+
+   margin: 0;
+}
+
+.chat-window,
+.chat-header,
+.chat-header-left,
+.chat-header-right,
+.chat-title-content,
+.chat-messages,
+.chat-welcome {
+   box-sizing: border-box;
+
+   min-width: 0;
+   max-width: 100%;
+}
+
+
+/* =========================================================
+   RESPONSIVE LAYOUT
+   ---------------------------------------------------------
+   The base styles above are intentionally kept intact.
+   Responsive behavior below uses BOTH viewport media queries
+   and container queries so ChatWindow responds to its actual
+   available width when it sits beside a sidebar.
+   ========================================================= */
+
+/* Container queries are based on the actual ChatWindow width. */
+.chat-window {
+   container-type: inline-size;
+   container-name: chat-window;
+   width: 100%;
+   max-width: 100%;
+   min-width: 0;
+}
+
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+
+.sidebar-toggle-button {
+   display: none;
+}
+
+
+/* =========================================================
+   VIEWPORT FALLBACK: <= 1100px
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
    .chat-header {
       gap: 14px;
       padding: 16px 20px;
@@ -817,14 +1108,11 @@
 
    .chat-header-right {
       gap: 7px;
+      min-width: 0;
    }
 
    .chat-export-button {
       padding: 0 11px;
-   }
-
-   .chat-export-menu {
-      width: 195px;
    }
 
    .mode-button {
@@ -838,61 +1126,332 @@
 }
 
 
-/* =========================================
-   MOBILE
-========================================= */
+/* =========================================================
+   CONTAINER / VIEWPORT: NARROW CHAT
+   <= 900px
+   ========================================================= */
 
-@media (max-width: 760px) {
+@container chat-window (max-width: 900px) {
+
    .chat-window {
       width: 100%;
-      height: 100%;
-
+      max-width: 100%;
       min-width: 0;
       min-height: 0;
-
-      max-width: none;
-      max-height: none;
-
+      height: 100%;
       overflow: hidden;
    }
+
+   /* ------------------------------------------------------
+      HEADER
+      ------------------------------------------------------ */
 
    .chat-header {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
       min-height: 0;
 
-      align-items: flex-start;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
 
-      padding: 14px 16px;
+      gap: 8px;
+      padding: 8px 10px;
 
-      gap: 12px;
+      box-sizing: border-box;
+      overflow: visible !important;
    }
 
+   /* First row: hamburger / back / title */
    .chat-header-left {
+      width: 100%;
+      max-width: 100%;
       min-width: 0;
 
-      padding-top: 2px;
+      flex: 0 0 auto;
 
-      overflow: hidden;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+
+      box-sizing: border-box;
+      overflow: hidden !important;
    }
 
-   .chat-header-right {
+   .sidebar-toggle-button {
+      display: inline-flex !important;
+
+      position: static !important;
+      inset: auto !important;
+      transform: none;
+
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      min-height: 36px;
+      flex: 0 0 36px;
+
+      align-items: center;
+      justify-content: center;
+
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+   }
+
+   .sidebar-toggle-button svg {
+      width: 19px;
+      height: 19px;
+      flex: 0 0 auto;
+   }
+
+   .mobile-back-to-chats {
+      display: inline-flex;
+      flex: 0 0 auto;
       min-width: 0;
-
-      align-items: flex-start;
-
-      gap: 7px;
+      max-width: 100%;
+      min-height: 32px;
+      padding: 0 7px;
+      font-size: 10px;
+      white-space: nowrap;
+      box-sizing: border-box;
    }
 
    .chat-title-icon {
       width: 34px;
       height: 34px;
+      min-width: 34px;
       flex: 0 0 34px;
-
       border-radius: 9px;
    }
 
    .chat-title-icon svg {
       width: 17px;
       height: 17px;
+   }
+
+   .chat-title-content {
+      flex: 1 1 auto;
+      min-width: 0;
+      max-width: 100%;
+      overflow: hidden;
+   }
+
+   .chat-header h1 {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 14px;
+   }
+
+   .chat-status {
+      min-width: 0;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 10px;
+   }
+
+   /* ------------------------------------------------------
+      SECOND ROW
+      Grid guarantees that Export can never be pushed out.
+      ------------------------------------------------------ */
+
+   .chat-header-right {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+
+      flex: 0 0 auto;
+
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 6px;
+
+      box-sizing: border-box;
+      overflow: visible !important;
+   }
+
+   /* Mode selector occupies the flexible left column. */
+   .chat-mode-selector {
+      grid-column: 1;
+      grid-row: 1;
+
+      width: 100%;
+      min-width: 0;
+      max-width: none;
+
+      flex: none;
+
+      display: flex;
+      align-items: center;
+      gap: 3px;
+
+      padding: 3px;
+      box-sizing: border-box;
+
+      overflow: hidden;
+   }
+
+   .mode-button {
+      flex: 1 1 0;
+
+      width: auto;
+      min-width: 0;
+      max-width: none;
+
+      height: 34px;
+      min-height: 34px;
+
+      padding: 5px 4px;
+      gap: 3px;
+
+      overflow: hidden;
+
+      font-size: 10px;
+      line-height: 1;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+
+      box-sizing: border-box;
+   }
+
+   .mode-button svg {
+      width: 12px;
+      height: 12px;
+      flex: 0 0 12px;
+   }
+
+   /* Export occupies the fixed right column. */
+   .chat-export-wrapper {
+      grid-column: 2;
+      grid-row: 1;
+
+      width: auto;
+      min-width: 0;
+      flex: none;
+
+      position: relative;
+      margin-left: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+
+      overflow: visible !important;
+      z-index: 2000;
+   }
+
+   .chat-export-button {
+      width: 68px;
+      min-width: 68px;
+      max-width: 68px;
+
+      height: 34px;
+      min-height: 34px;
+
+      padding: 0 7px;
+      gap: 5px;
+
+      font-size: 10px;
+      white-space: nowrap;
+      box-sizing: border-box;
+   }
+
+   /* Export popup stays inside the actual chat width. */
+   .chat-export-menu {
+      top: calc(100% + 8px);
+      right: 0;
+      left: auto;
+
+      width: 190px;
+      max-width: min(190px, calc(100cqw - 16px));
+
+      box-sizing: border-box;
+      z-index: 9999;
+   }
+
+   /* ------------------------------------------------------
+      MESSAGES
+      ------------------------------------------------------ */
+
+   .chat-messages {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      min-height: 0;
+
+      padding: 28px 12px 16px;
+
+      overflow-x: hidden;
+      overflow-y: auto;
+
+      box-sizing: border-box;
+      touch-action: pan-y;
+      -webkit-overflow-scrolling: touch;
+   }
+
+   .chat-messages>* {
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
+   }
+
+   .chat-welcome {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+
+      padding: 28px 12px;
+      overflow: hidden;
+      box-sizing: border-box;
+   }
+
+   .chat-welcome h2 {
+      width: 100%;
+      max-width: 100%;
+      font-size: 20px;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+   }
+
+   .chat-welcome p {
+      width: 100%;
+      max-width: 590px;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      font-size: 11px;
+      line-height: 1.55;
+   }
+}
+
+
+/* =========================================================
+   CONTAINER / VIEWPORT: MOBILE
+   <= 760px
+   ========================================================= */
+
+@container chat-window (max-width: 760px) {
+
+   .chat-header {
+      padding: 10px 14px;
+      gap: 8px;
+   }
+
+   .chat-header-left {
+      gap: 8px;
+   }
+
+   .chat-header-right {
+      gap: 6px;
    }
 
    .chat-header h1 {
@@ -905,16 +1464,138 @@
    }
 
    .chat-export-button {
+      height: 36px;
       min-height: 36px;
+      width: 70px;
+      min-width: 70px;
+      max-width: 70px;
+      padding: 0 8px;
+      font-size: 10px;
+   }
 
-      padding: 0 10px;
+   .chat-mode-selector {
+      gap: 3px;
+   }
 
-      font-size: 11px;
+   .mode-button {
+      height: 36px;
+      min-height: 36px;
+      padding: 6px 6px;
+      font-size: 10px;
+   }
+
+   .chat-messages {
+      padding: 28px 14px 15px;
+   }
+
+   .chat-welcome {
+      min-height: 100%;
+      padding: 32px 16px;
+   }
+
+   .welcome-icon {
+      width: 52px;
+      height: 52px;
+      margin-bottom: 15px;
+      border-radius: 14px;
+   }
+
+   .chat-welcome h2 {
+      font-size: 22px;
+   }
+
+   .chat-welcome p {
+      width: 100%;
+      max-width: 590px;
+      font-size: 12.5px;
+      line-height: 1.6;
+   }
+}
+
+
+/* =========================================================
+   CONTAINER / VIEWPORT: SMALL MOBILE
+   <= 520px
+   ========================================================= */
+
+@container chat-window (max-width: 520px) {
+
+   .chat-header {
+      padding: 8px 10px;
+      gap: 7px;
+   }
+
+   .chat-header-left {
+      gap: 6px;
+   }
+
+   .chat-header-right {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 5px;
+   }
+
+   .sidebar-toggle-button {
+      width: 34px;
+      height: 34px;
+      min-width: 34px;
+      min-height: 34px;
+      flex-basis: 34px;
+      border-radius: 8px;
+   }
+
+   .sidebar-toggle-button svg {
+      width: 18px;
+      height: 18px;
+   }
+
+   .mobile-back-to-chats {
+      min-height: 30px;
+      padding: 0 6px;
+      font-size: 9px;
+   }
+
+   .chat-title-icon {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      flex-basis: 32px;
+   }
+
+   .chat-title-icon svg {
+      width: 16px;
+      height: 16px;
+   }
+
+   .chat-header h1 {
+      font-size: 13px;
+   }
+
+   .chat-status {
+      font-size: 9px;
+   }
+
+   .chat-export-button {
+      width: 70px;
+      min-width: 70px;
+      max-width: 70px;
+      height: 34px;
+      min-height: 34px;
+      padding: 0 7px;
+      font-size: 9px;
+   }
+
+   .chat-export-arrow {
+      width: 11px;
+      height: 11px;
+      font-size: 9px;
    }
 
    .chat-export-menu {
-      width: 185px;
-      max-width: calc(100vw - 20px);
+      top: calc(100% + 8px);
+      right: 0;
+      left: auto;
+      width: 180px;
+      max-width: min(180px, calc(100cqw - 12px));
    }
 
    .chat-export-menu button {
@@ -925,165 +1606,30 @@
       width: 28px;
       height: 28px;
       flex-basis: 28px;
-
       font-size: 13px;
    }
 
    .chat-mode-selector {
-      max-width: 100%;
+      gap: 2px;
+      padding: 2px;
    }
 
    .mode-button {
-      min-height: 36px;
-
-      padding: 7px 9px;
-
-      font-size: 10.5px;
-   }
-
-   .chat-messages {
-      width: 100%;
-
-      min-width: 0;
-      min-height: 0;
-
-      max-width: none;
-
-      padding: 28px 14px 15px;
-
-      overflow-x: hidden;
-      overflow-y: auto;
-
-      touch-action: pan-y;
-
-      -webkit-overflow-scrolling: touch;
-   }
-
-   .chat-welcome {
-      min-height: 100%;
-
-      padding: 32px 16px;
-   }
-
-   .welcome-icon {
-      width: 52px;
-      height: 52px;
-
-      margin-bottom: 15px;
-
-      border-radius: 14px;
-   }
-
-   .chat-welcome h2 {
-      font-size: 22px;
-   }
-
-   .chat-welcome p {
-      width: min(100%, 590px);
-
-      font-size: 12.5px;
-      line-height: 1.6;
-   }
-}
-
-
-/* =========================================
-   SMALL MOBILE
-========================================= */
-
-@media (max-width: 520px) {
-   .chat-window {
-      width: 100%;
-      height: 100%;
-
-      min-width: 0;
-      min-height: 0;
-   }
-
-   .chat-header {
-      flex-direction: column;
-      align-items: stretch;
-
-      padding: 13px 14px;
-   }
-
-   .chat-header-left {
-      width: 100%;
-      min-width: 0;
-   }
-
-   .chat-header-right {
-      width: 100%;
-      min-width: 0;
-
-      justify-content: space-between;
-      align-items: center;
-   }
-
-   .chat-export-wrapper {
-      flex: 0 0 auto;
-   }
-
-   .chat-export-button {
-      min-height: 38px;
-
-      padding: 0 11px;
-
-      font-size: 11px;
-   }
-
-   .chat-export-menu {
-      left: 0;
-      right: auto;
-
-      width: 185px;
-      max-width: calc(100vw - 20px);
-   }
-
-   .chat-header h1 {
-      font-size: 15px;
-   }
-
-   .chat-status {
-      font-size: 10.5px;
-   }
-
-   .chat-mode-selector {
-      flex: 1 1 auto;
-
-      width: auto;
-      max-width: none;
-
-      justify-content: stretch;
-   }
-
-   .mode-button {
-      flex: 1 1 0;
-
-      min-width: 0;
-
-      padding: 7px 6px;
-
-      font-size: 10px;
+      height: 34px;
+      min-height: 34px;
+      padding: 6px 4px;
+      gap: 2px;
+      font-size: 9px;
    }
 
    .mode-button svg {
-      width: 13px;
-      height: 13px;
+      width: 10px;
+      height: 10px;
+      flex: 0 0 10px;
    }
 
    .chat-messages {
       padding: 24px 10px 12px;
-
-      overflow-x: hidden;
-      overflow-y: auto;
-
-      touch-action: pan-y;
-   }
-
-   .chat-messages>* {
-      min-width: 0;
-      max-width: 100%;
    }
 
    .chat-welcome {
@@ -1095,52 +1641,93 @@
    }
 
    .chat-welcome p {
-      width: min(100%, 590px);
-
+      width: 100%;
+      max-width: 100%;
       font-size: 12px;
    }
 }
 
 
-/* =========================================
-   VERY SMALL SCREENS
-========================================= */
+/* =========================================================
+   CONTAINER / VIEWPORT: VERY SMALL
+   <= 380px
+   ========================================================= */
 
-@media (max-width: 380px) {
+@container chat-window (max-width: 380px) {
+
    .chat-header {
-      padding: 12px 10px;
+      padding: 6px 7px;
+      gap: 6px;
    }
 
-   .chat-title-icon {
+   .chat-header-left {
+      gap: 4px;
+   }
+
+   .sidebar-toggle-button {
       width: 32px;
       height: 32px;
+      min-width: 32px;
+      min-height: 32px;
       flex-basis: 32px;
    }
 
+   .sidebar-toggle-button svg {
+      width: 17px;
+      height: 17px;
+   }
+
+   .mobile-back-to-chats {
+      gap: 4px;
+      min-height: 29px;
+      padding: 0 5px;
+      font-size: 8px;
+   }
+
+   .chat-title-icon {
+      width: 30px;
+      height: 30px;
+      min-width: 30px;
+      flex-basis: 30px;
+   }
+
    .chat-title-icon svg {
-      width: 16px;
-      height: 16px;
+      width: 15px;
+      height: 15px;
    }
 
    .chat-header h1 {
-      font-size: 14px;
+      font-size: 12px;
    }
 
    .chat-status {
-      font-size: 10px;
+      font-size: 8px;
+   }
+
+   .chat-header-right {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 4px;
    }
 
    .chat-export-button {
-      min-width: 70px;
+      width: 64px;
+      min-width: 64px;
+      max-width: 64px;
+      height: 32px;
+      min-height: 32px;
+      padding: 0 5px;
+      font-size: 8px;
+   }
 
-      padding: 0 9px;
-
-      font-size: 10px;
+   .chat-export-arrow {
+      width: 10px;
+      height: 10px;
+      font-size: 8px;
    }
 
    .chat-export-menu {
       width: 170px;
-      max-width: calc(100vw - 16px);
+      max-width: min(170px, calc(100cqw - 10px));
    }
 
    .chat-export-menu button {
@@ -1152,36 +1739,37 @@
       width: 26px;
       height: 26px;
       flex-basis: 26px;
-
       font-size: 12px;
    }
 
+   .chat-mode-selector {
+      gap: 2px;
+      padding: 2px;
+   }
+
    .mode-button {
-      gap: 4px;
-
-      padding: 7px 4px;
-
-      font-size: 9.5px;
+      gap: 2px;
+      min-width: 0;
+      min-height: 32px;
+      height: 32px;
+      padding: 5px 2px;
+      font-size: 8px;
    }
 
    .mode-button svg {
-      width: 12px;
-      height: 12px;
+      width: 9px;
+      height: 9px;
+      flex-basis: 9px;
    }
 
    .chat-messages {
-      padding-left: 8px;
-      padding-right: 8px;
-
-      overflow-x: hidden;
-      overflow-y: auto;
-
-      touch-action: pan-y;
+      padding-left: 7px;
+      padding-right: 7px;
    }
 
    .chat-welcome {
-      padding-left: 10px;
-      padding-right: 10px;
+      padding-left: 9px;
+      padding-right: 9px;
    }
 
    .chat-welcome h2 {
@@ -1190,11 +1778,519 @@
 }
 
 
-/* =========================================
+/* =========================================================
+   VIEWPORT FALLBACK FOR MOBILE DEVICES
+   ---------------------------------------------------------
+   These rules exist for browsers/layouts where the ChatWindow
+   is not yet participating in a container query. They mirror
+   the same safe structure without relying on viewport width
+   for the desktop sidebar case.
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+   .chat-window {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      min-height: 0;
+      height: 100%;
+      overflow: hidden;
+   }
+
+   .chat-header {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      min-height: 0;
+
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+
+      gap: 8px;
+      padding: 8px 10px;
+
+      box-sizing: border-box;
+      overflow: visible !important;
+   }
+
+   .chat-header-left {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      flex: 0 0 auto;
+
+      display: flex;
+      align-items: center;
+      gap: 7px;
+
+      overflow: hidden !important;
+      box-sizing: border-box;
+   }
+
+   .sidebar-toggle-button {
+      display: inline-flex !important;
+      position: static !important;
+      inset: auto !important;
+      transform: none;
+
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      min-height: 36px;
+      flex: 0 0 36px;
+   }
+
+   .mobile-back-to-chats {
+      display: inline-flex;
+      flex: 0 0 auto;
+      min-width: 0;
+      max-width: 100%;
+   }
+
+   .chat-title-content {
+      flex: 1 1 auto;
+      min-width: 0;
+      max-width: 100%;
+      overflow: hidden;
+   }
+
+   .chat-header h1 {
+      max-width: 100%;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+   }
+
+   .chat-status {
+      min-width: 0;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+   }
+
+   .chat-header-right {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 6px;
+
+      flex: 0 0 auto;
+      box-sizing: border-box;
+      overflow: visible !important;
+   }
+
+   .chat-mode-selector {
+      grid-column: 1;
+      grid-row: 1;
+      width: 100%;
+      min-width: 0;
+      max-width: none;
+      flex: none;
+      display: flex;
+      gap: 3px;
+      overflow: hidden;
+   }
+
+   .mode-button {
+      flex: 1 1 0;
+      width: auto;
+      min-width: 0;
+      max-width: none;
+      height: 34px;
+      min-height: 34px;
+      padding: 5px 4px;
+      gap: 3px;
+      overflow: hidden;
+      font-size: 10px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+   }
+
+   .chat-export-wrapper {
+      grid-column: 2;
+      grid-row: 1;
+      width: auto;
+      min-width: 0;
+      flex: none;
+      margin-left: 0;
+      position: relative;
+      overflow: visible !important;
+      z-index: 2000;
+   }
+
+   .chat-export-button {
+      width: 68px;
+      min-width: 68px;
+      max-width: 68px;
+      height: 34px;
+      min-height: 34px;
+      padding: 0 7px;
+      font-size: 10px;
+   }
+
+   .chat-export-menu {
+      top: calc(100% + 8px);
+      right: 0;
+      left: auto;
+      width: 190px;
+      max-width: calc(100vw - 16px);
+      box-sizing: border-box;
+   }
+
+   .chat-messages {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      min-height: 0;
+      padding: 28px 12px 16px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      box-sizing: border-box;
+      touch-action: pan-y;
+      -webkit-overflow-scrolling: touch;
+   }
+
+   .chat-messages>* {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+   }
+}
+
+@media (max-width: 760px) {
+
+   .chat-header {
+      padding: 10px 14px;
+   }
+
+   .chat-header-right {
+      gap: 6px;
+   }
+
+   .chat-header h1 {
+      font-size: 16px;
+   }
+
+   .chat-status {
+      font-size: 11px;
+   }
+
+   .chat-export-button {
+      width: 70px;
+      min-width: 70px;
+      max-width: 70px;
+      height: 36px;
+      min-height: 36px;
+      padding: 0 8px;
+      font-size: 10px;
+   }
+
+   .mode-button {
+      height: 36px;
+      min-height: 36px;
+      padding: 6px 6px;
+      font-size: 10px;
+   }
+
+   .chat-messages {
+      padding: 28px 14px 15px;
+   }
+
+   .chat-welcome {
+      min-height: 100%;
+      padding: 32px 16px;
+   }
+
+   .welcome-icon {
+      width: 52px;
+      height: 52px;
+      margin-bottom: 15px;
+      border-radius: 14px;
+   }
+
+   .chat-welcome h2 {
+      font-size: 22px;
+   }
+
+   .chat-welcome p {
+      width: 100%;
+      max-width: 590px;
+      font-size: 12.5px;
+      line-height: 1.6;
+   }
+}
+
+@media (max-width: 520px) {
+
+   .chat-header {
+      padding: 8px 10px;
+      gap: 7px;
+   }
+
+   .chat-header-left {
+      gap: 6px;
+   }
+
+   .chat-header-right {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 5px;
+   }
+
+   .sidebar-toggle-button {
+      width: 34px;
+      height: 34px;
+      min-width: 34px;
+      min-height: 34px;
+      flex-basis: 34px;
+      border-radius: 8px;
+   }
+
+   .sidebar-toggle-button svg {
+      width: 18px;
+      height: 18px;
+   }
+
+   .mobile-back-to-chats {
+      min-height: 30px;
+      padding: 0 6px;
+      font-size: 9px;
+   }
+
+   .chat-title-icon {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      flex-basis: 32px;
+   }
+
+   .chat-title-icon svg {
+      width: 16px;
+      height: 16px;
+   }
+
+   .chat-header h1 {
+      font-size: 13px;
+   }
+
+   .chat-status {
+      font-size: 9px;
+   }
+
+   .chat-export-button {
+      width: 70px;
+      min-width: 70px;
+      max-width: 70px;
+      height: 34px;
+      min-height: 34px;
+      padding: 0 7px;
+      font-size: 9px;
+   }
+
+   .chat-export-menu {
+      width: 180px;
+      max-width: calc(100vw - 12px);
+   }
+
+   .chat-export-menu button {
+      min-height: 42px;
+   }
+
+   .chat-export-menu button>span:first-child {
+      width: 28px;
+      height: 28px;
+      flex-basis: 28px;
+      font-size: 13px;
+   }
+
+   .chat-mode-selector {
+      gap: 2px;
+      padding: 2px;
+   }
+
+   .mode-button {
+      height: 34px;
+      min-height: 34px;
+      padding: 6px 4px;
+      gap: 2px;
+      font-size: 9px;
+   }
+
+   .mode-button svg {
+      width: 10px;
+      height: 10px;
+      flex-basis: 10px;
+   }
+
+   .chat-messages {
+      padding: 24px 10px 12px;
+   }
+
+   .chat-welcome {
+      padding: 28px 12px;
+   }
+
+   .chat-welcome h2 {
+      font-size: 20px;
+   }
+
+   .chat-welcome p {
+      width: 100%;
+      max-width: 100%;
+      font-size: 12px;
+   }
+}
+
+@media (max-width: 380px) {
+
+   .chat-header {
+      padding: 6px 7px;
+      gap: 6px;
+   }
+
+   .chat-header-left {
+      gap: 4px;
+   }
+
+   .sidebar-toggle-button {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      min-height: 32px;
+      flex-basis: 32px;
+   }
+
+   .sidebar-toggle-button svg {
+      width: 17px;
+      height: 17px;
+   }
+
+   .mobile-back-to-chats {
+      gap: 4px;
+      min-height: 29px;
+      padding: 0 5px;
+      font-size: 8px;
+   }
+
+   .chat-title-icon {
+      width: 30px;
+      height: 30px;
+      min-width: 30px;
+      flex-basis: 30px;
+   }
+
+   .chat-title-icon svg {
+      width: 15px;
+      height: 15px;
+   }
+
+   .chat-header h1 {
+      font-size: 12px;
+   }
+
+   .chat-status {
+      font-size: 8px;
+   }
+
+   .chat-header-right {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 4px;
+   }
+
+   .chat-export-button {
+      width: 64px;
+      min-width: 64px;
+      max-width: 64px;
+      height: 32px;
+      min-height: 32px;
+      padding: 0 5px;
+      font-size: 8px;
+   }
+
+   .chat-export-arrow {
+      width: 10px;
+      height: 10px;
+      font-size: 8px;
+   }
+
+   .chat-export-menu {
+      width: 170px;
+      max-width: calc(100vw - 10px);
+   }
+
+   .chat-export-menu button {
+      gap: 8px;
+      padding: 0 8px;
+   }
+
+   .chat-export-menu button>span:first-child {
+      width: 26px;
+      height: 26px;
+      flex-basis: 26px;
+      font-size: 12px;
+   }
+
+   .chat-mode-selector {
+      gap: 2px;
+      padding: 2px;
+   }
+
+   .mode-button {
+      gap: 2px;
+      min-width: 0;
+      min-height: 32px;
+      height: 32px;
+      padding: 5px 2px;
+      font-size: 8px;
+   }
+
+   .mode-button svg {
+      width: 9px;
+      height: 9px;
+      flex-basis: 9px;
+   }
+
+   .chat-messages {
+      padding-left: 7px;
+      padding-right: 7px;
+   }
+
+   .chat-welcome {
+      padding-left: 9px;
+      padding-right: 9px;
+   }
+
+   .chat-welcome h2 {
+      font-size: 19px;
+   }
+}
+
+
+/* =========================================================
    TOUCH DEVICES
-========================================= */
+   ========================================================= */
 
 @media (hover: none) and (pointer: coarse) {
+
+   .sidebar-toggle-button:hover {
+      transform: none;
+
+      background:
+         linear-gradient(145deg,
+            #1d222a,
+            #151920);
+
+      box-shadow: none;
+   }
+
    .chat-export-button:hover:not(:disabled) {
       transform: none;
       box-shadow: none;
@@ -1207,23 +2303,19 @@
 
    .chat-export-menu button:hover {
       transform: none;
-
       color: #d7dce3;
-
       background: transparent;
       border-color: transparent;
    }
 
    .mode-button:hover:not(:disabled) {
       color: #858d99;
-
       background: transparent;
       border-color: transparent;
    }
 
    .mode-button.active:hover:not(:disabled) {
       color: #f4f5f7;
-
       border-color: #3b424d;
 
       background:
@@ -1238,11 +2330,12 @@
 }
 
 
-/* =========================================
+/* =========================================================
    REDUCED MOTION
-========================================= */
+   ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
+
    .chat-messages {
       scroll-behavior: auto;
    }
@@ -1255,15 +2348,136 @@
       animation: none;
    }
 
+   .sidebar-toggle-button,
    .mode-button,
    .chat-export-button,
    .chat-export-arrow,
+   .chat-export-menu,
    .chat-export-menu button,
-   .chat-export-menu button>span:first-child {
+   .chat-export-menu button>span:first-child,
+   .mobile-back-to-chats {
       transition: none;
+      animation: none;
    }
 
    .chat-export-menu {
       animation: none;
+   }
+}
+
+
+/* =========================================================
+   FINAL SAFETY OVERRIDES
+   ========================================================= */
+
+.chat-window,
+.chat-header,
+.chat-header-left,
+.chat-header-right,
+.chat-title-content,
+.chat-messages,
+.chat-welcome,
+.chat-export-wrapper,
+.chat-mode-selector {
+   min-width: 0;
+   box-sizing: border-box;
+}
+
+.chat-header {
+   overflow: visible !important;
+}
+
+.chat-header-right {
+   overflow: visible !important;
+}
+
+.chat-export-wrapper {
+   position: relative;
+   overflow: visible !important;
+   z-index: 2000;
+}
+
+.chat-export-button {
+   position: relative;
+   z-index: 2001;
+}
+
+.chat-export-menu {
+   position: absolute;
+   top: calc(100% + 10px);
+   right: 0;
+   left: auto;
+   z-index: 9999;
+   display: block;
+   visibility: visible;
+   opacity: 1;
+   width: 210px;
+   max-width: calc(100vw - 20px);
+   box-sizing: border-box;
+}
+
+@container chat-window (max-width: 900px) {
+   .chat-header-right {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 6px;
+   }
+
+   .chat-mode-selector {
+      grid-column: 1;
+      min-width: 0;
+      max-width: none;
+      width: 100%;
+   }
+
+   .chat-export-wrapper {
+      grid-column: 2;
+      min-width: 0;
+      margin-left: 0;
+   }
+
+   .chat-export-menu {
+      top: calc(100% + 8px);
+      right: 0;
+      max-width: min(190px, calc(100cqw - 16px));
+   }
+
+   .sidebar-toggle-button {
+      position: static !important;
+      inset: auto !important;
+      transform: none;
+   }
+}
+
+@media (max-width: 900px) {
+   .chat-header-right {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 6px;
+   }
+
+   .chat-mode-selector {
+      grid-column: 1;
+      min-width: 0;
+      max-width: none;
+      width: 100%;
+   }
+
+   .chat-export-wrapper {
+      grid-column: 2;
+      min-width: 0;
+      margin-left: 0;
+   }
+
+   .chat-export-menu {
+      top: calc(100% + 8px);
+      right: 0;
+      max-width: calc(100vw - 16px);
+   }
+
+   .sidebar-toggle-button {
+      position: static !important;
+      inset: auto !important;
+      transform: none;
    }
 }

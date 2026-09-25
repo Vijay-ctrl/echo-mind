@@ -1,15 +1,10 @@
 /* =========================================
    APP LOADING
-   ========================================= */
+========================================= */
 
 .app-loading {
   width: 100%;
   min-width: 0;
-
-  /*
-   * Use dynamic viewport height where supported.
-   * The fallback keeps compatibility with older browsers.
-   */
   min-height: 100vh;
   min-height: 100dvh;
 
@@ -17,18 +12,19 @@
   align-items: center;
   justify-content: center;
 
-  /*
-   * Safe-area support for devices with
-   * notches / rounded screen edges.
-   */
+  box-sizing: border-box;
+
   padding:
     max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
 
-  box-sizing: border-box;
-
   overflow: hidden;
 
-  background: #0b0d12;
+  background:
+    radial-gradient(circle at 50% 35%,
+      rgba(255, 255, 255, 0.025),
+      transparent 42%),
+    #0b0d12;
+
   color: #9ca3af;
 
   font-family: inherit;
@@ -38,18 +34,13 @@
 
   text-align: center;
 
-  /*
-   * Prevent accidental text overflow on
-   * extremely narrow screens.
-   */
   overflow-wrap: anywhere;
-  word-break: break-word;
 }
 
 
 /* =========================================
-   LOADING CONTENT SAFETY
-   ========================================= */
+   LOADING CONTENT
+========================================= */
 
 .app-loading>* {
   min-width: 0;
@@ -59,72 +50,70 @@
 
 /* =========================================
    TABLET
-   ========================================= */
+========================================= */
 
 @media (max-width: 768px) {
-  .app-loading {
-    font-size: 14px;
 
+  .app-loading {
     padding:
       max(16px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
   }
+
 }
 
 
 /* =========================================
    MOBILE
-   ========================================= */
+========================================= */
 
 @media (max-width: 620px) {
-  .app-loading {
-    /*
-     * Keep the fallback for browsers that
-     * don't support dynamic viewport units.
-     */
-    min-height: 100vh;
-    min-height: 100dvh;
 
+  .app-loading {
     padding:
       max(14px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
 
     font-size: 13px;
   }
+
 }
 
 
 /* =========================================
    SMALL MOBILE
-   ========================================= */
+========================================= */
 
 @media (max-width: 420px) {
+
   .app-loading {
     padding:
       max(12px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
-
-    font-size: 13px;
   }
+
 }
 
 
 /* =========================================
    VERY SMALL DEVICES
-   ========================================= */
+========================================= */
 
 @media (max-width: 360px) {
+
   .app-loading {
     padding:
       max(10px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
 
     font-size: 12px;
   }
+
 }
 
 
 /* =========================================
    LANDSCAPE MOBILE
-   ========================================= */
+========================================= */
 
 @media (max-height: 500px) and (orientation: landscape) {
+
   .app-loading {
     min-height: 100vh;
     min-height: 100dvh;
@@ -135,30 +124,35 @@
     padding-bottom:
       max(10px, env(safe-area-inset-bottom));
   }
+
 }
 
 
 /* =========================================
    TOUCH DEVICES
-   ========================================= */
+========================================= */
 
 @media (hover: none) and (pointer: coarse) {
+
   .app-loading {
     /*
-     * Prevent accidental horizontal scrolling
-     * during the loading state.
+     * Loading is a temporary non-interactive state,
+     * so preventing accidental gestures here is safe.
      */
     touch-action: none;
   }
+
 }
 
 
 /* =========================================
    REDUCED MOTION
-   ========================================= */
+========================================= */
 
 @media (prefers-reduced-motion: reduce) {
+
   .app-loading {
     scroll-behavior: auto;
   }
+
 }
