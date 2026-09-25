@@ -1082,56 +1082,6 @@ function Sidebar({
 
     <>
 
-      {/* =====================================
-             MOBILE SIDEBAR TOGGLE
-         ===================================== */}
-
-      <button
-
-        type="button"
-
-        className={
-          `mobile-sidebar-toggle ${isMobileOpen
-            ? "open"
-            : ""
-          }`
-        }
-
-        onClick={
-          toggleMobileSidebar
-        }
-
-        aria-label={
-          isMobileOpen
-            ? "Close chat sidebar"
-            : "Open chat sidebar"
-        }
-
-        aria-expanded={
-          isMobileOpen
-        }
-
-        title={
-          isMobileOpen
-            ? "Close sidebar"
-            : "Open chat sidebar"
-        }
-
-      >
-
-        <span
-          className="mobile-sidebar-toggle-icon"
-          aria-hidden="true"
-        >
-
-          {isMobileOpen
-            ? "×"
-            : "☰"}
-
-        </span>
-
-      </button>
-
 
       {/* =====================================
              MOBILE OVERLAY

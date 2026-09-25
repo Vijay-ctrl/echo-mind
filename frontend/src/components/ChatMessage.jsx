@@ -19,6 +19,304 @@ import FeedbackButtons from "./FeedbackButtons";
 import "./ChatMessage.css";
 
 
+/* =========================================================
+   CONVERT MARKDOWN TO CLEAN COPY TEXT
+   ========================================================= */
+
+const getCleanCopyText = (markdown) => {
+   if (!markdown || typeof markdown !== "string") {
+      return "";
+   }
+
+   let text = markdown;
+
+   /*
+      ==========================================
+      CODE BLOCKS
+      ==========================================
+
+      ```javascript
+      const x = 10;
+      ```
+
+      becomes:
+
+      const x = 10;
+   */
+
+   text = text.replace(
+      /```[a-zA-Z0-9_+-]*\s*\n?/g,
+      ""
+   );
+
+   text = text.replace(
+      /```/g,
+      ""
+   );
+
+
+   /*
+      ==========================================
+      IMAGES
+      ==========================================
+
+      ![Image description](image-url)
+
+      becomes:
+
+      Image description
+   */
+
+   text = text.replace(
+      /!\[([^\]]*)\]\([^)]+\)/g,
+      "$1"
+   );
+
+
+   /*
+      ==========================================
+      LINKS
+      ==========================================
+
+      [Google](https://google.com)
+
+      becomes:
+
+      Google
+   */
+
+   text = text.replace(
+      /\[([^\]]+)\]\([^)]+\)/g,
+      "$1"
+   );
+
+
+   /*
+      ==========================================
+      INLINE CODE
+      ==========================================
+
+      `React`
+
+      becomes:
+
+      React
+   */
+
+   text = text.replace(
+      /`([^`]+)`/g,
+      "$1"
+   );
+
+
+   /*
+      ==========================================
+      HEADINGS
+      ==========================================
+
+      ## Introduction
+
+      becomes:
+
+      Introduction
+   */
+
+   text = text.replace(
+      /^\s{0,3}#{1,6}\s+/gm,
+      ""
+   );
+
+
+   /*
+      ==========================================
+      BOLD
+      ==========================================
+
+      **important**
+      __important__
+
+      becomes:
+
+      important
+   */
+
+   text = text.replace(
+      /\*\*(.*?)\*\*/g,
+      "$1"
+   );
+
+   text = text.replace(
+      /__(.*?)__/g,
+      "$1"
+   );
+
+
+   /*
+      ==========================================
+      ITALIC
+      ==========================================
+
+      *text*
+      _text_
+
+      becomes:
+
+      text
+   */
+
+   text = text.replace(
+      /(?<!\*)\*([^*\n]+)\*(?!\*)/g,
+      "$1"
+   );
+
+   text = text.replace(
+      /(?<!_)_([^_\n]+)_(?!_)/g,
+      "$1"
+   );
+
+
+   /*
+      ==========================================
+      STRIKETHROUGH
+      ==========================================
+
+      ~~deleted~~
+
+      becomes:
+
+      deleted
+   */
+
+   text = text.replace(
+      /~~(.*?)~~/g,
+      "$1"
+   );
+
+
+   /*
+      ==========================================
+      BLOCKQUOTES
+      ==========================================
+
+      > Some text
+
+      becomes:
+
+      Some text
+   */
+
+   text = text.replace(
+      /^\s*>\s?/gm,
+      ""
+   );
+
+
+   /*
+      ==========================================
+      BULLET LISTS
+      ==========================================
+
+      - Item
+      * Item
+      + Item
+
+      becomes:
+
+      • Item
+   */
+
+   text = text.replace(
+      /^\s*[-*+]\s+/gm,
+      "• "
+   );
+
+
+   /*
+      ==========================================
+      NUMBERED LISTS
+      ==========================================
+
+      1. First
+      2. Second
+
+      remains:
+
+      1. First
+      2. Second
+   */
+
+   text = text.replace(
+      /^\s*(\d+)\.\s+/gm,
+      "$1. "
+   );
+
+
+   /*
+      ==========================================
+      HORIZONTAL RULES
+      ==========================================
+   */
+
+   text = text.replace(
+      /^\s*([-*_]){3,}\s*$/gm,
+      ""
+   );
+
+
+   /*
+      ==========================================
+      HTML TAGS
+      ==========================================
+
+      Remove HTML formatting tags if Gemini
+      happens to return them.
+   */
+
+   text = text.replace(
+      /<\/?[^>]+(>|$)/g,
+      ""
+   );
+
+
+   /*
+      ==========================================
+      ESCAPED MARKDOWN CHARACTERS
+      ==========================================
+   */
+
+   text = text.replace(
+      /\\([\\`*_[\]{}()#+.!>~-])/g,
+      "$1"
+   );
+
+
+   /*
+      ==========================================
+      EXCESSIVE WHITESPACE
+      ==========================================
+   */
+
+   text = text.replace(
+      /[ \t]+\n/g,
+      "\n"
+   );
+
+   text = text.replace(
+      /\n{3,}/g,
+      "\n\n"
+   );
+
+
+   /*
+      ==========================================
+      FINAL CLEANUP
+      ==========================================
+   */
+
+   return text.trim();
+};
+
+
 function ChatMessage({
    role,
    message,
@@ -115,8 +413,24 @@ function ChatMessage({
 
       try {
 
+         /*
+            Convert Markdown into clean readable
+            text before putting it into clipboard.
+         */
+
+         const cleanText =
+            getCleanCopyText(displayMessage);
+
+
+         if (!cleanText) {
+
+            return;
+
+         }
+
+
          await navigator.clipboard.writeText(
-            displayMessage
+            cleanText
          );
 
 
